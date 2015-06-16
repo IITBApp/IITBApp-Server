@@ -1,0 +1,26 @@
+
+#Email server settings
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
+
+EMAIL_USERNAME = ""
+EMAIL_PASSWORD = ""
+
+SERVER = "http://localhost:8000"
+
+# Registration
+ALLOWED_DOMAINS = [
+    'iitb.ac.in',
+]
+
+
+#DB Setting
+IS_TEST = True
+
+#database settings
+DB_ENGINE = 'django.db.backends.postgresql_psycopg2'
+DB_NAME = 'iitb_app'
+DB_USER = 'iitb_app'
+DB_PASSWORD = 'iitb_app'
+DB_HOST = '127.0.0.1'
+DB_PORT = '5432'

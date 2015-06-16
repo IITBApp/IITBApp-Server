@@ -1,0 +1,5 @@
+settings_user.py
+db.sqlite3
+iitbapp.db
+*.log
+*.pyc
