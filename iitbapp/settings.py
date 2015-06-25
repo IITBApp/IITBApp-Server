@@ -120,7 +120,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'iitbapp/static'),
     )
 
 STATICFILES_FINDERS = (
