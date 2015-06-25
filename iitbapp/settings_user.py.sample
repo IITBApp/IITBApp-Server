@@ -8,6 +8,8 @@ EMAIL_PASSWORD = ""
 
 SERVER = "http://localhost:8000"
 
+EMAIL_FROM = ""
+
 # Registration
 ALLOWED_DOMAINS = [
     'iitb.ac.in',
@@ -24,3 +26,6 @@ DB_USER = 'iitb_app'
 DB_PASSWORD = 'iitb_app'
 DB_HOST = '127.0.0.1'
 DB_PORT = '5432'
+
+#SUPERUSER USERNAME
+SUPERUSER = 'dheerendra'

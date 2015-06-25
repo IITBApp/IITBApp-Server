@@ -3,3 +3,6 @@ db.sqlite3
 iitbapp.db
 *.log
 *.pyc
+.idea
+iitbapp/media
+iitbapp/staticfiles

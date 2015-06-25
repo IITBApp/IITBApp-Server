@@ -28,6 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
 
 # Application definition
 
@@ -40,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
+    'news',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -102,6 +110,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'iitbapp/media/')
+
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'iitbapp/staticfiles/')
+
+STATIC_URL = '/static/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -159,6 +175,28 @@ if DEBUG:
     for logger in LOGGING['loggers']:
         LOGGING['loggers'][logger]['handlers'] = ['file']
 
+STATICFILES_DIRS = (
+    # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
+
+    )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'iitbapp.tokenauth.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
 # User specific settings
 EMAIL_HOST = config.EMAIL_HOST
@@ -172,3 +210,5 @@ EMAIL_PASSWORD = config.EMAIL_PASSWORD
 SERVER = config.SERVER
 
 ALLOWED_DOMAINS = config.ALLOWED_DOMAINS
+
+SUPERUSER = config.SUPERUSER

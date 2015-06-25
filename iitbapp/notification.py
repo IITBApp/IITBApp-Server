@@ -9,7 +9,7 @@ def send_mail(subject, text_msg, from_email, to_email_list):
     server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
     server.starttls()
     server.ehlo()
-    server.esmtp_features['auth'] = 'LOGIN PLAIN'
+    server.esmtp_features['authentication'] = 'LOGIN PLAIN'
     server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD)
 
     mail = MIMEMultipart("alternative")
