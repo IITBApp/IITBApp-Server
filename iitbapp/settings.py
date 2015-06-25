@@ -118,6 +118,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'iitbapp/staticfiles/')
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
+    os.path.join(BASE_DIR, 'static'),
+    )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -131,12 +141,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
-STATIC_URL = '/static/'
 
 LOGGING = {
     'version': 1,
@@ -174,16 +178,6 @@ if DEBUG:
     # make all loggers use the console.
     for logger in LOGGING['loggers']:
         LOGGING['loggers'][logger]['handlers'] = ['file']
-
-STATICFILES_DIRS = (
-    # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
-
-    )
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
