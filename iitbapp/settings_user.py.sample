@@ -21,9 +21,9 @@ IS_TEST = True
 
 #database settings
 DB_ENGINE = 'django.db.backends.postgresql_psycopg2'
-DB_NAME = 'iitb_app'
-DB_USER = 'iitb_app'
-DB_PASSWORD = 'iitb_app'
+DB_NAME = 'iitbapp'
+DB_USER = 'iitbapp'
+DB_PASSWORD = 'iitbapp'
 DB_HOST = '127.0.0.1'
 DB_PORT = '5432'
 
