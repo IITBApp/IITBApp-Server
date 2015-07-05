@@ -2,7 +2,7 @@ __author__ = 'dheerenr'
 
 from rest_framework import serializers
 from models import News, NewsImage, NewsLike, NewsViews
-from authentication.serializers import UserSerializer
+from authentication.serializers import UserSerializer, DesignationReadSerializer
 
 class NewsImageSerializer(serializers.ModelSerializer):
 
@@ -18,7 +18,7 @@ class NewsWriteSerializer(serializers.ModelSerializer):
         model = News
 
 class NewsReadSerializer(NewsWriteSerializer):
-    posted_by = UserSerializer(read_only=True)
+    posted_by = DesignationReadSerializer(read_only=True)
 
 class NewsLikeSerializer(serializers.ModelSerializer):
     class Meta:

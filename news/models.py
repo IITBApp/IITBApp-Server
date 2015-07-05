@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
+from authentication.models import Designation
 import os
 
 # Create your models here.
@@ -18,7 +19,7 @@ class News(models.Model):
     title = models.CharField(max_length=512)
     description = models.TextField()
     category = models.CharField(max_length=8, choices=[("sports", "Sports")])
-    posted_by = models.ForeignKey(User, related_name='news')
+    posted_by = models.ForeignKey(Designation, related_name='news')
     published = models.BooleanField(default=False)
 
     def __unicode__(self):
