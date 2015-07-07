@@ -19,11 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from authentication import urls as authentication_urls
 from news import urls as news_urls
+from event import urls as event_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include(authentication_urls)),
     url(r'', include(news_urls)),
+    url(r'', include(event_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('',
