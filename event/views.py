@@ -5,7 +5,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import viewsets
 from models import Event, EventLike, EventViews
 from rest_framework.decorators import list_route, detail_route
-from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
+from serializers import EventReadSerializer, EventWriteSerializer, EventLikeSerializer, EventViewSerializer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
@@ -16,7 +16,12 @@ class EventPagination(LimitOffsetPagination):
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     pagination_class = EventPagination
-    serializer_class = EventReadSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST', 'PUT', 'PATCH']:
+            return EventWriteSerializer
+        else:
+            return EventReadSerializer
 
     @list_route(methods=['POST'])
     def like(self, request):
