@@ -25,11 +25,11 @@ from information import urls as information_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^public/', include(information_urls)),
     url(r'', include(authentication_urls)),
     url(r'', include(news_urls)),
     url(r'', include(event_urls)),
     url(r'', include(notice_urls)),
-    url(r'', include(information_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('',

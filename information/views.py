@@ -8,29 +8,29 @@ class InformationPaginationClass(LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
 
-class ContactViewset(viewsets.ModelViewSet):
+class AbstractInformationViewset(viewsets.ReadOnlyModelViewSet):
+
+    pagination_class = InformationPaginationClass
+
+class ContactViewset(AbstractInformationViewset):
 
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    pagination_class = InformationPaginationClass
 
 
-class ClubViewset(viewsets.ModelViewSet):
+class ClubViewset(AbstractInformationViewset):
 
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
-    pagination_class = InformationPaginationClass
 
 
-class DepartmentViewset(viewsets.ModelViewSet):
+class DepartmentViewset(AbstractInformationViewset):
 
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
-    pagination_class = InformationPaginationClass
 
 
-class EmergencyContactViewset(viewsets.ModelViewSet):
+class EmergencyContactViewset(AbstractInformationViewset):
 
     queryset = EmergencyContact.objects.all()
     serializer_class = EmergencyContactSerializer
-    pagination_class = InformationPaginationClass

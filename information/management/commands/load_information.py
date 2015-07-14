@@ -13,6 +13,7 @@ class Command(BaseCommand):
 
     def load_model(self, modelSerializer, json_file):
         model_name = modelSerializer.Meta.model.__name__
+        model_type = modelSerializer.Meta.model
         if not os.path.isfile(json_file):
             self.stderr.write("File Not Found. Error in retrieving file %s" % json_file)
         else:
@@ -21,9 +22,12 @@ class Command(BaseCommand):
             for datum in data:
                 model = modelSerializer(data=datum)
                 if model.is_valid():
-                    model.save()
+                    try:
+                        model_type.objects.get(pk=datum['id'])
+                    except model_type.DoesNotExist:
+                        model.save()
                 else:
-                    self.stderr.write("\nCannot load invalid data into model %s from file %s with id %s" % (
+                    self.stderr.write("\nCannot load invalid data into model %s from file %s with pk %s" % (
                         model_name, json_file, datum['id']))
                     for error in model.errors:
                         self.stderr.write("  %s" % error)
