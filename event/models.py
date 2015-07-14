@@ -3,6 +3,7 @@ import os
 from uuid import uuid4
 from authentication.models import Designation
 from django.contrib.auth.models import User
+from consts import categories
 
 # Create your models here.
 
@@ -15,14 +16,13 @@ def event_images(instance, filename):
     return os.path.join("event_images", uuid4().hex + "." + ext)
 
 class Event(models.Model):
-    event_category = [('sport', 'SPORTS')]
     title = models.CharField(max_length=256)
     description = models.TextField()
-    category = models.CharField(max_length=16, choices=event_category)
+    category = models.CharField(max_length=16, choices=categories)
     event_time = models.DateTimeField()
     event_place = models.CharField(max_length=256)
-    image = models.ImageField(null=True, upload_to=event_images)
-    created = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(null=True, blank=True, upload_to=event_images)
+    time = models.DateTimeField(auto_now_add=True)
     cancelled = models.BooleanField(default=False)
     posted_by = models.ForeignKey(Designation, related_name='events')
 
