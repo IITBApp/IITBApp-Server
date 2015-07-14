@@ -36,7 +36,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     @list_route(methods=['POST'])
-    def dislike(self, request):
+    def unlike(self, request):
         serializer = EventLikeSerializer(data=request.data)
         if serializer.is_valid():
             event = serializer.data['event']

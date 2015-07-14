@@ -42,7 +42,7 @@ class NewsViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     @list_route(methods=['POST'])
-    def dislike(self, request):
+    def unlike(self, request):
         serializer = NewsLikeSerializer(data=request.data)
         if serializer.is_valid():
             news = serializer.data['news']
