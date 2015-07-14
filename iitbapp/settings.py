@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import settings_user as config
+import logging.config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'gcm',
     'authentication',
     'news',
     'event',
@@ -145,11 +147,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s [%(asctime)s] [%(name)s] [%(module)s] [Process:%(process)d] [Thread:%(thread)d] %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -161,26 +164,33 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
             },
+        'file_django': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/django.log',
+            'formatter': 'verbose'
+            },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'application.log',
-            'formatter': 'simple'
+            'filename': 'logs/application.log',
+            'formatter': 'verbose'
             },
         },
     'loggers': {
-        'django': {
+        '': {
             'handlers': ['file'],
             'level': 'DEBUG',
-            'propagate': True,
             },
-        }
-    }
+        'django': {
+            'handlers': ['file_django'],
+            'level': 'DEBUG',
+            'propagate': False,
+            },
+        },
 
-if DEBUG:
-    # make all loggers use the console.
-    for logger in LOGGING['loggers']:
-        LOGGING['loggers'][logger]['handlers'] = ['file']
+    }
+logging.config.dictConfig(LOGGING)
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -210,4 +220,4 @@ ALLOWED_DOMAINS = config.ALLOWED_DOMAINS
 
 SUPERUSER = config.SUPERUSER
 
-GCM_KEY = config.GCM_KEY
+GCM_APIKEY = config.GCM_KEY
