@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Undergraduate Admission",
+    "description": "Joint Entrance Examination(JEE) Interactive Voice Response System and Contacts to Chairman JEE",
+    "link": "",
+    "email": "jeeiitb@itb.ac.in",
+    "facebook": "",
+    "phone": "+912225767063",
+    "fax": "+912225720305"
+  },
+  {
+    "id": 2,
+    "title": "Academic Matters",
+    "description": "Contacts for the Deputy Registrar",
+    "link": "",
+    "email": "dracad@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767041",
+    "fax": "+912225767041"
+  },
+  {
+    "id": 3,
+    "title": "Student Services",
+    "description": "Contacts for the Incharge Gymkhana",
+    "link": "",
+    "email": "ssyadav@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767079",
+    "fax": "+912225723480"
+  },
+  {
+    "id": 4,
+    "title": "International Matters",
+    "description": "Contacts for the Dean International Relations' Office",
+    "link": "",
+    "email": "dean.ir.office@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767076",
+    "fax": "+912225723475"
+  },
+  {
+    "id": 5,
+    "title": "Research & Development",
+    "description": "Contacts for the Dean R & D Office",
+    "link": "",
+    "email": "dean.rnd.office@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767039",
+    "fax": "+912225723702"
+  },
+  {
+    "id": 6,
+    "title": "Centre for Distance Engineering Education Programme",
+    "description": "Contacts for the CDEEP Office",
+    "link": "",
+    "email": "cdeep@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225764820",
+    "fax": "+912225764812"
+  },
+  {
+    "id": 7,
+    "title": "Graduate Admission",
+    "description": "Contacts To Chairman GATE/CEED/JMET",
+    "link": "",
+    "email": "gateoffice@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767068",
+    "fax": "+912225723706"
+  },
+  {
+    "id": 8,
+    "title": "M.Sc. Admission",
+    "description": "Contacts To Chairman JAM",
+    "link": "",
+    "email": "jamchr@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767022",
+    "fax": "+912225762674"
+  },
+  {
+    "id": 9,
+    "title": "Library Services",
+    "description": "Contacts For General Enquiries About IITB Library",
+    "link": "",
+    "email": "skulkarni@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225768933",
+    "fax": "+912225720227"
+  },
+  {
+    "id": 10,
+    "title": "Alumni Matters",
+    "description": "Contacts To Administrative Officer",
+    "link": "",
+    "email": "iitb_aa@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767086",
+    "fax": "+912225767019"
+  },
+  {
+    "id": 11,
+    "title": "Student Placement",
+    "description": "Contacts For The Placement Officer",
+    "link": "",
+    "email": "placement@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767097",
+    "fax": "+912225767092"
+  },
+  {
+    "id": 12,
+    "title": "General Information & Media Relations",
+    "description": "Contacts For Public Relations Officer",
+    "link": "",
+    "email": "pro@iitb.ac.in",
+    "facebook": "",
+    "phone": "+912225767026",
+    "fax": "+912225767027"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Hospital",
+    "description": "",
+    "link": "http://www.iitb.ac.in/facilities/hospital.html",
+    "email": "",
+    "facebook": "",
+    "phone": "+912225767051",
+    "fax": ""
+  },
+  {
+    "id": 2,
+    "title": "Ambulance",
+    "description": "",
+    "link": "http://www.iitb.ac.in/facilities/hospital.html",
+    "email": "",
+    "facebook": "",
+    "phone": "+912225761110",
+    "fax": ""
+  },
+  {
+    "id": 3,
+    "title": "Security Office",
+    "description": "",
+    "link": "",
+    "email": "",
+    "facebook": "",
+    "phone": "+912225768989",
+    "fax": ""
+  },
+  {
+    "id": 4,
+    "title": "Main Gate",
+    "description": "",
+    "link": "",
+    "email": "",
+    "facebook": "",
+    "phone": "+912225768793",
+    "fax": ""
+  }
+]

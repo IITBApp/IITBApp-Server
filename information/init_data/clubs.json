@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "title": "WNCC",
+    "description": "This is one of the biggest and exclusive student clubs of IIT Bombay. The club houses some of the most talented and genius computer G33KS of IITB. It serves as a common platform for exchange of web, coding and programming related knowledge. It operates under the Student Technical Activities Body (STAB) of IITB.",
+    "link": "http://wncc.github.io/",
+    "email": "",
+    "facebook": "https://www.facebook.com/wncc.iitb",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 2,
+    "title": "SINE",
+    "description": "Society for Innovation and Entrepreneurship, hosted by Indian Institute of Technology Bombay- IIT Bombay is an umbrella for promotion of entrepreneurship at IIT Bombay. SINE administers a business incubator which provides support for technology based entrepreneurship. Thus, SINE extends the role of IIT Bombay by facilitating the conversion of research activity into entrepreneurial ventures. ",
+    "link": "http://www.sineiitb.org/",
+    "email": "",
+    "facebook": "",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 3,
+    "title": "E-Cell",
+    "description": "The Entrepreneurship Cell, IIT Bombay firmly believes that emerging economies like India need the drive and innovation of young entrepreneurs. The Cell therefore aims at manifesting the latent Entrepreneurial spirit of the youth. The Cell not only motivates the youth to start-up their own enterprise, but also makes efforts to provide them with the necessary resources to do so.",
+    "link": "http://www.iitbecell.org/",
+    "email": "",
+    "facebook": "https://www.facebook.com/ecell.in",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 4,
+    "title": "Insight",
+    "description": "Insight is the students media body in IIT Bombay. It deals with the creation of the student's news letter Insight and the youtube channel IIT BBC. It aims at providing undoctored information and news updates about institute activities.",
+    "link": "http://www.insightiitb.org/",
+    "email": "insight@iitb.ac.in",
+    "facebook": "https://www.facebook.com/insight.iitbombay",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 5,
+    "title": "SARC",
+    "description": "Student Alumni Relations Cell, SARC is a voluntary organization run by the students of IIT Bombay committed towards the enhancement of relations between students and alumni of IIT Bombay. Over the past years' SARC has launched many initiatives which have acted as a common platform for interaction between students and Alumni.",
+    "link": "http://www.sarc-iitb.org/",
+    "email": "sarc@iitb.org",
+    "facebook": "https://www.facebook.com/SARC.IITB",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 6,
+    "title": "TechFest",
+    "description": "Born in 1998 with the motto of promoting technology, scientific thinking and innovation, Techfest has surpassed 16 golden years of creating an unmatched aura of a science and technology spectacle year after year at the campus of IIT Bombay at Powai, Mumbai. Today it is well established as Asia's Largest Science and Technology festival, with more than 100,000 people in attendance and a reach of over 2300 colleges across India and over 500 overseas.",
+    "link": "http://www.techfest.org/",
+    "email": "",
+    "facebook": "https://www.facebook.com/techfest.iitb",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 7,
+    "title": "Mood Indigo",
+    "description": "Mood Indigo, also known as or MI, is the annual cultural festival of the Indian Institute of Technology Bombay. It is an event usually held towards the end of December every year. Mood Indigo was started back in 1971, contributed partly by the IIT Bombay Gymkhana and partly by advertisements. In 1973, it was set up as a student-run non-profit organization. Since then, the students of the institute have been organising the fest, making it a totally student-run festival with no outside help.",
+    "link": "https://moodi.org/",
+    "email": "",
+    "facebook": "https://www.facebook.com/iitb.moodindigo",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 8,
+    "title": "IIT Bombay Culturals",
+    "description": "At IIT Bombay, Cultural Council undertakes a variety of cultural activities, which are broadly classified under 7 genres - Dance, Dramatics, Film and Media(F&M), Literary Arts, Music, Photography and Fine Arts(PFA), and Speaking. The Institute Cultural Council organizes events, workshops and all other cultural activities round the year. Indulge yourself in the seven deadly sins an IITian must commit!",
+    "link": "http://gymkhana.iitb.ac.in/~cultural/",
+    "email": "",
+    "facebook": "",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 9,
+    "title": "The Quiz Club",
+    "description": "The oldest and best established clubs in IIT Bombay, the Quiz Club meets every Wednesday at 9:00 p. m. in the Hostel-8 lounge. Each meeting covers questions on wide variety of topics like sports, food, India, cartoons, music, history, science fiction, films, love & marriage, and so on. The Quiz Club is largely responsible for the resurgence of quizzing and other literary events in IIT Bombay. The wide exposure to trivia and the recycling of outside quizzes also helps. ",
+    "link": "",
+    "email": "",
+    "facebook": "",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 10,
+    "title": "The Speaker's Club",
+    "description": "Formed just recently, this club focuses on all kinds of speaking events, debating, extempore speaking, elocution and jamming. The latter being an event in which IITB used to dominate. Other activities on the cards are in - house competitions, presentations and fundaes sessions with experienced jammers. ",
+    "link": "",
+    "email": "",
+    "facebook": "",
+    "phone": "",
+    "fax": ""
+  },
+  {
+    "id": 11,
+    "title": "The Hobbies CLub",
+    "description": "This club includes hobbies like electronics, astronomy, HAM radio and aeromodelling. The electronics room in SAC, accessible at any time, has the facilities and literature for students to design, experiment with and construct various electronic circuits.",
+    "link": "",
+    "email": "",
+    "facebook": "",
+    "phone": "",
+    "fax": ""
+  }
+]

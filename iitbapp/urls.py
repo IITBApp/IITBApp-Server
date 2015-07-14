@@ -21,6 +21,7 @@ from authentication import urls as authentication_urls
 from news import urls as news_urls
 from event import urls as event_urls
 from notice import urls as notice_urls
+from information import urls as information_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'', include(news_urls)),
     url(r'', include(event_urls)),
     url(r'', include(notice_urls)),
+    url(r'', include(information_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns('',
