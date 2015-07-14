@@ -13,3 +13,6 @@ class Designation(models.Model):
         if curr_date <= self.end_date and curr_date >= self.start_date:
             return True
         return False
+
+    def __unicode__(self):
+        return self.user.username + "-" + self.post
