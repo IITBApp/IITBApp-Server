@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
 from authentication.models import Designation
-from consts import categories
+from globals import categories
 import os
 
 # Create your models here.

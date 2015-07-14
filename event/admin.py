@@ -1,8 +1,12 @@
 from django.contrib import admin
-from models import Event
+from models import Event, EventImage
 
 # Register your models here.
 class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'posted_by',)
 
+class EventImageAdmin(admin.ModelAdmin):
+    list_display = ['event', 'image']
+
 admin.site.register(Event, EventAdmin)
+admin.site.register(EventImage, EventImageAdmin)

@@ -6,19 +6,11 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.pagination import LimitOffsetPagination
-from PIL import Image
+import globals
 
 class NewsPagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
-
-def verify_image(image):
-    try:
-        Image.open(image)
-        return True
-    except:
-        return False
-
 
 class NewsViewSet(viewsets.ModelViewSet):
 
@@ -75,7 +67,7 @@ class NewsViewSet(viewsets.ModelViewSet):
     def upload_image(self, request, pk):
         news = get_object_or_404(News, pk=pk)
         image = request.FILES.get('image')
-        is_image = verify_image(image)
+        is_image = globals.verify_image(image)
         if not is_image:
             return Response({'detail': 'Image not found or incorrect file type'}, status=HTTP_400_BAD_REQUEST)
         news_image = NewsImage(news=news, image=image)

@@ -3,7 +3,7 @@ import os
 from uuid import uuid4
 from authentication.models import Designation
 from django.contrib.auth.models import User
-from consts import categories
+from globals import categories
 
 # Create your models here.
 
@@ -21,10 +21,19 @@ class Event(models.Model):
     category = models.CharField(max_length=16, choices=categories)
     event_time = models.DateTimeField()
     event_place = models.CharField(max_length=256)
-    image = models.ImageField(null=True, blank=True, upload_to=event_images)
     time = models.DateTimeField(auto_now_add=True)
     cancelled = models.BooleanField(default=False)
     posted_by = models.ForeignKey(Designation, related_name='events')
+
+    def __unicode__(self):
+        return self.title
+
+class EventImage(models.Model):
+    event = models.ForeignKey(Event, related_name='images')
+    image = models.ImageField(upload_to=event_images)
+
+    def __unicode__(self):
+        return self.image.url
 
 
 class EventLike(models.Model):

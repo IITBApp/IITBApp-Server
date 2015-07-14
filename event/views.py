@@ -1,13 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import viewsets
-from models import Event, EventLike, EventViews
+from models import Event, EventLike, EventViews, EventImage
 from rest_framework.decorators import list_route, detail_route
-from serializers import EventReadSerializer, EventWriteSerializer, EventLikeSerializer, EventViewSerializer
+from serializers import EventReadSerializer, EventWriteSerializer, EventLikeSerializer, EventViewSerializer, EventImageSerializer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
+import globals
 
 class EventPagination(LimitOffsetPagination):
     default_limit = 10
@@ -55,3 +56,27 @@ class EventViewSet(viewsets.ModelViewSet):
             return Response(EventViewSerializer(event_view).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['POST'])
+    def cancel(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        event.cancelled = True
+        event.save()
+        return Response(EventReadSerializer(event).data)
+
+    @detail_route(methods=['POST', 'PUT'])
+    def upload_image(self, request, pk):
+        news = get_object_or_404(Event, pk=pk)
+        image = request.FILES.get('image')
+        is_image = globals.verify_image(image)
+        if not is_image:
+            return Response({'detail': 'Image not found or incorrect file type'}, status=HTTP_400_BAD_REQUEST)
+        news_image = EventImage(news=news, image=image)
+        news_image.save()
+        return Response(EventImageSerializer(news_image).data)
+
+    @detail_route(methods=['DELETE'])
+    def delete_image(self, request, pk):
+        image = get_object_or_404(EventImage, pk=pk)
+        image.delete()
+        return Response(EventImageSerializer(image).data)

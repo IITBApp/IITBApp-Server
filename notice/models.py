@@ -6,7 +6,7 @@ from authentication.models import Designation
 notice_priority = [('0', 'Low'), ('1', 'Medium'), ('2', 'High'), ('3', 'Urgent')]
 
 class Notice(models.Model):
-    issue_date = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=256)
     description = models.TextField()
     priority = models.CharField(max_length=1, choices=notice_priority)
