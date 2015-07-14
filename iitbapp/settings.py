@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'gcm',
     'authentication',
     'news',
     'event',
@@ -149,7 +150,7 @@ LOGGING = {
     'version': 1,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s [%(asctime)s] [%(module)s] [Process:%(process)d] [Thread:%(thread)d] %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -161,26 +162,40 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
             },
+        'file_django': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'output/logs/django.log',
+            'formatter': 'verbose'
+            },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'application.log',
-            'formatter': 'simple'
+            'filename': 'output/logs/application.log',
+            'formatter': 'verbose'
             },
         },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['file_django'],
             'level': 'DEBUG',
             'propagate': True,
             },
+        'notice': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+            },
         }
+
     }
 
+'''
 if DEBUG:
     # make all loggers use the console.
     for logger in LOGGING['loggers']:
         LOGGING['loggers'][logger]['handlers'] = ['file']
+'''
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -210,4 +225,4 @@ ALLOWED_DOMAINS = config.ALLOWED_DOMAINS
 
 SUPERUSER = config.SUPERUSER
 
-GCM_KEY = config.GCM_KEY
+GCM_APIKEY = config.GCM_KEY
