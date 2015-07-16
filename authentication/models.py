@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 
 class Designation(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='designations')
     post = models.CharField(max_length=128)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)

@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/content/login/'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -48,11 +50,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'gcm',
+    'stronghold',
     'authentication',
     'news',
     'event',
     'notice',
     'information',
+    'content',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,6 +68,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'stronghold.middleware.LoginRequiredMiddleware',
 )
 
 ROOT_URLCONF = 'iitbapp.urls'
@@ -71,7 +76,10 @@ ROOT_URLCONF = 'iitbapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'iitbapp/templates'),
+            os.path.join(BASE_DIR, 'content/templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -204,6 +212,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+#Strong hold settings
+STRONGHOLD_PUBLIC_URLS = (
+    r'^/api',
+    r'^/public',
+    r'^/admin',
+)
 
 # User specific settings
 EMAIL_HOST = config.EMAIL_HOST
