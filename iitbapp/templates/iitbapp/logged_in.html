@@ -1,0 +1,23 @@
+{% extends 'iitbapp/root.html' %}
+
+{% block navbar_right_link %}
+    <li role="presentation" class="dropdown">
+        <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents"
+           aria-expanded="false">Content Type <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+            <li><a href="#news-b" role="tab" id="news-tab-control" data-toggle="tab" aria-controls="news-tab">News</a>
+            </li>
+            <li><a href="#event-tab" role="tab" id="event-tab-control" data-toggle="tab" aria-controls="event-tab">Event</a>
+            </li>
+            <li><a href="#notice-tab" role="tab" id="notice-tab-control" data-toggle="tab" aria-controls="notice-tab">Notice</a>
+            </li>
+        </ul>
+    </li>
+    <li><a href="/"><strong>{{ request.user.first_name }}</strong></a></li>
+    <li><a href="/content/logout">Logout</a></li>
+{% endblock %}
+
+
+{% block navbar_left_link %}
+
+{% endblock %}
