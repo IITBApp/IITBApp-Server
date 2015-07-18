@@ -5,7 +5,7 @@ from models import Contact, Club, Department, EmergencyContact
 from rest_framework.pagination import LimitOffsetPagination
 
 class InformationPaginationClass(LimitOffsetPagination):
-    default_limit = 10
+    default_limit = 20
     max_limit = 50
 
 class AbstractInformationViewset(viewsets.ReadOnlyModelViewSet):

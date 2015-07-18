@@ -19,7 +19,7 @@ class News(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=512)
     description = models.TextField()
-    category = models.CharField(max_length=8, choices=categories)
+    category = models.CharField(max_length=16, choices=categories)
     posted_by = models.ForeignKey(Designation, related_name='news')
     published = models.BooleanField(default=False)
 

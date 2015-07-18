@@ -3,8 +3,6 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
-from django.utils.decorators import method_decorator
-from stronghold.decorators import public
 from iitbapp.views import StrongholdPublicMixin
 
 class IndexView(View):
@@ -12,7 +10,14 @@ class IndexView(View):
     template_name = 'content_home.html'
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        designations = request.user.designations.all()
+        active_designations = [designation for designation in designations if designation.is_active()]
+        return render(request, self.template_name, {'designations': active_designations})
+
+class AddPostView(View):
+
+    def post(self, request):
+        pass
 
 class LoginView(StrongholdPublicMixin, View):
 

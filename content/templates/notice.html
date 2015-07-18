@@ -1,0 +1,70 @@
+<div role="tabpanel" class="tab-pane fade" id="notice-tab" aria-labelledby="notice-tab">
+<div class="page-header">
+    <h1>Notice <small>Add or modify your notices</small></h1>
+</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Add/Update notice
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="notice-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="notice-id" value="-1"/>
+                        <ul id="notice-error-list">
+
+                        </ul>
+                        <div class="form-group" id="notice-title-div">
+                            <label for="notice-title">Title</label>
+                            <input class="form-control" type="text" name="title" id="notice-title" placeholder="Title" required/>
+                        </div>
+                        <div class="form-group" id="notice-description-div">
+                            <label for="notice-description">Description</label>
+                            <textarea rows="3" class="form-control" type="text" name="description"
+                                      id="notice-description" placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group" id="notice-priority-div">
+                            <label for="notice-priority">Priority</label>
+                            <select class="form-control" name="priority" id="notice-priority">
+                                <option value="0" style="color:green">Low</option>
+                                <option value="1" style="color:yellow">Normal</option>
+                                <option value="2" style="color:orange">High</option>
+                                <option value="3" style="color:red">Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="notice-expiry-div">
+                            <label for="expiry">Expiration</label>
+                            <input class="form-control" type="datetime-local" name="expiration-date"
+                                   id="notice-expiry"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="notice-designation">Post As</label>
+                            <select class="form-control" name="designation" id="notice-designation">
+                                {% for designation in designations %}
+                                    <option value="{{ designation.id }}">{{ designation.post }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="notice-add-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Past notices by you
+                </div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

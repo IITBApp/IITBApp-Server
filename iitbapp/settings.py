@@ -218,6 +218,7 @@ STRONGHOLD_PUBLIC_URLS = (
     r'^/api',
     r'^/public',
     r'^/admin',
+    r'^/gcm',
 )
 
 # User specific settings
