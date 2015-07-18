@@ -13,7 +13,7 @@ class Notice(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField()
     priority = models.CharField(max_length=1, choices=notice_priority)
-    expiration_date = models.DateTimeField(null=True)
+    expiration_date = models.DateTimeField(null=True, blank=True)
     posted_by = models.ForeignKey(Designation)
 
 def send_gcm_for_notice(sender, instance, created, **kwargs):

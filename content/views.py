@@ -12,7 +12,15 @@ class IndexView(View):
     template_name = 'content_home.html'
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        designations = request.user.designations.all()
+        active_designations = []
+        #TODO: filter out active designations
+        return render(request, self.template_name, {'designations': designations})
+
+class AddPostView(View):
+
+    def post(self, request):
+        pass
 
 class LoginView(StrongholdPublicMixin, View):
 

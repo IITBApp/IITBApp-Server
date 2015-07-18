@@ -1,1 +1,15 @@
 {% extends 'iitbapp/logged_in.html' %}
+{% load static %}
+
+{% block jsLinks %}
+    <script src="{% static 'js/notice.js' %}" type="application/javascript"></script>
+{% endblock %}
+
+{% block cssLinks %}
+    <link href="{% static 'css/notice.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block body %}
+    {% include 'notice.html' %}
+{% endblock %}
+
