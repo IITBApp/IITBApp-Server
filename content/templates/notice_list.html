@@ -1,0 +1,24 @@
+<div class="list-group">
+    {% for result in results %}
+        <button class="list-group-item btn btn-block notice-list-btn" data-id="{{ result.id }}"
+                data-description="{{ result.description }}" data-priority="{{ result.priority }}"
+                data-expiration-date="{{ result.expiration_date }}"
+                data-designation="{{ result.posted_by.id }}"> {{ result.title }}
+        </button>
+    {% endfor %}
+</div>
+<hr>
+<nav>
+    <ul class="pager">
+        {% if previous %}
+            <li><a id="notice-previous" href="{{ previous }}">Previous</a></li>
+        {% else %}
+            <li class="disabled"><a id="notice-previous" href="">Previous</a></li>
+        {% endif %}
+        {% if next %}
+            <li><a id="notice-next" href="{{ next }}">Next</a></li>
+        {% else %}
+            <li class="disabled"><a id="notice-next" href="">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>

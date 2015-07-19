@@ -2,11 +2,11 @@ from django.db import models
 from authentication.models import Designation
 from gcm.models import get_device_model
 from django.db.models import signals
+from globals import notice_priority
 import logging
 
 logger = logging.getLogger(__name__)
 
-notice_priority = [('0', 'Low'), ('1', 'Medium'), ('2', 'High'), ('3', 'Urgent')]
 
 class Notice(models.Model):
     time = models.DateTimeField(auto_now_add=True)
