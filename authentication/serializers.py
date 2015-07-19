@@ -38,5 +38,5 @@ class DesignationReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Designation
-        fields = ['name', 'email', 'post']
+        fields = ['id', 'name', 'email', 'post']
 

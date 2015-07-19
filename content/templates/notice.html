@@ -1,7 +1,9 @@
 <div role="tabpanel" class="tab-pane fade" id="notice-tab" aria-labelledby="notice-tab">
-<div class="page-header">
-    <h1>Notice <small>Add or modify your notices</small></h1>
-</div>
+    <div class="page-header">
+        <h1>Notice
+            <small>Add or modify your notices</small>
+        </h1>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
@@ -11,17 +13,18 @@
                 <div class="panel-body">
                     <form role="form" id="notice-form" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="notice-id" value="-1"/>
+                        <input type="hidden" name="id" id="notice-id" value="-1"/>
                         <ul id="notice-error-list">
 
                         </ul>
                         <div class="form-group" id="notice-title-div">
                             <label for="notice-title">Title</label>
-                            <input class="form-control" type="text" name="title" id="notice-title" placeholder="Title" required/>
+                            <input class="form-control" type="text" name="title" id="notice-title" placeholder="Title"
+                                   required/>
                         </div>
                         <div class="form-group" id="notice-description-div">
                             <label for="notice-description">Description</label>
-                            <textarea rows="3" class="form-control" type="text" name="description"
+                            <textarea rows="3" class="form-control" name="description"
                                       id="notice-description" placeholder="Description"></textarea>
                         </div>
                         <div class="form-group" id="notice-priority-div">
@@ -35,8 +38,14 @@
                         </div>
                         <div class="form-group" id="notice-expiry-div">
                             <label for="expiry">Expiration</label>
-                            <input class="form-control" type="datetime-local" name="expiration-date"
-                                   id="notice-expiry"/>
+
+                            <div class="input-group date" id="notice-expiration-date">
+                                <input class="form-control" type="text" name="expiration_date"
+                                       placeholder="dd-mm-yyyy HH:MM" id="notice-expiry"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="notice-designation">Post As</label>
@@ -47,7 +56,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-primary" id="notice-add-btn">Submit</button>
+                            <button type="submit" class="btn btn-primary" id="notice-add-btn">Submit</button>
+                            <button type="reset" class="btn btn-default" id="notice-reset-btn">Reset</button>
                         </div>
                     </form>
                 </div>
@@ -61,6 +71,10 @@
                     Past notices by you
                 </div>
                 <div class="panel-body">
+                    <div id="notice-list">
+
+
+                    </div>
 
                 </div>
             </div>

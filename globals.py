@@ -14,6 +14,9 @@ categories = [
     ('literature', 'Literature'),
 ]
 
+notice_priority = [('0', 'Low'), ('1', 'Medium'), ('2', 'High'), ('3', 'Urgent')]
+
+
 def verify_image(image):
     try:
         Image.open(image)

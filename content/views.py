@@ -1,9 +1,18 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest
 
 from django.views.generic import View
-from forms import LoginForm
+from forms.LoginForm import LoginForm
+from forms.NoticeForm import NoticeForm
 from django.contrib.auth import authenticate, login, logout
 from iitbapp.views import StrongholdPublicMixin
+from rest_framework.response import Response
+from notice.serializers import NoticeReadSerializer
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
+from notice.models import Notice
 
 class IndexView(View):
 
@@ -14,10 +23,18 @@ class IndexView(View):
         active_designations = [designation for designation in designations if designation.is_active()]
         return render(request, self.template_name, {'designations': active_designations})
 
-class AddPostView(View):
+class AddNoticeView(APIView):
+
+    renderer_classes = (JSONRenderer, )
 
     def post(self, request):
-        pass
+        noticeForm = NoticeForm(request.user, request.POST)
+        if noticeForm.is_valid():
+            notice = noticeForm.save()
+            return Response(NoticeReadSerializer(notice).data)
+        else:
+            return HttpResponseBadRequest(noticeForm.errors.as_json(), content_type='application/json')
+
 
 class LoginView(StrongholdPublicMixin, View):
 
@@ -57,3 +74,21 @@ class LogoutView(StrongholdPublicMixin, View):
     def get(self, request):
         logout(request)
         return redirect('login_page')
+
+
+class ReadOnlyModelViewsetPaginator(LimitOffsetPagination):
+
+    default_limit = 10
+    max_limit = 50
+
+class UserNoticeViewset(viewsets.ReadOnlyModelViewSet):
+
+    pagination_class = ReadOnlyModelViewsetPaginator
+    serializer_class = NoticeReadSerializer
+    renderer_classes = (TemplateHTMLRenderer, )
+    template_name = 'notice_list.html'
+
+    def get_queryset(self):
+        return Notice.objects.all().filter(posted_by__user=self.request.user)
+
+
