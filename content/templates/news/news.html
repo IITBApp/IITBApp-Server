@@ -1,0 +1,80 @@
+<div role="tabpanel" class="tab-pane fade" id="news-tab" aria-labelledby="news-tab">
+    <h1>News
+        <small>Add or modify your newss</small>
+    </h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Add/Update news
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="news-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" id="news-id" value="-1"/>
+                        <ul id="news-error-list">
+
+                        </ul>
+                        <div class="form-group" id="news-title-group">
+                            <label for="news-title">Title</label>
+                            <input class="form-control" type="text" name="title" id="news-title" placeholder="Title"
+                                   required/>
+                        </div>
+                        <div class="form-group" id="news-description-group">
+                            <label for="news-description">Description</label>
+                            <textarea rows="3" class="form-control" name="description"
+                                      id="news-description" placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group" id="news-category-group">
+                            <label for="news-category">Category</label>
+                            <select class="form-control" name="category" id="news-category">
+                                <option value="music">Music</option>
+                                <option value="photo">Photography</option>
+                                <option value="art">Fine Arts</option>
+                                <option value="sports">Sports</option>
+                                <option value="activity">Activity</option>
+                                <option value="tech">Tech</option>
+                                <option value="food">Food</option>
+                                <option value="literature">Literature</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="news-image-group">
+                            <label for="news-image-input">News image</label>
+                            <input type="file" name="news_image" id="news-image" accept="image/*"/>
+                            <div id="news-image-list"></div>
+                        </div>
+                        <div class="form-group" id="news-designation-group">
+                            <label for="news-designation">Post As</label>
+                            <select class="form-control" name="designation" id="news-designation">
+                                {% for designation in designations %}
+                                    <option value="{{ designation.id }}">{{ designation.post }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="news-add-btn">Submit</button>
+                            <button type="reset" class="btn btn-default" id="news-reset-btn">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Past news by you
+                </div>
+                <div class="panel-body">
+                    <div id="news-list">
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -74,10 +74,18 @@ class EventForm(forms.Form):
                             cancelled=cancelled,
                             posted_by_id=designation)
         event.save()
-        if event_image.image is not None:
-            eventImage = EventImage(
-                event=event,
-                image=event_image
-            )
+        if event_image is not None and event_image.image is not None:
+            '''
+            updating old image to just support single image for now. Should be changed in future to support multiple
+            images here and at UI side
+            '''
+            try:
+                eventImage = EventImage.objects.get(event=event)
+                eventImage.image = event_image
+            except EventImage.DoesNotExist:
+                eventImage = EventImage(
+                    event=event,
+                    image=event_image
+                )
             eventImage.save()
         return event

@@ -2,25 +2,16 @@
  * Created by dheerendra on 21/7/15.
  */
 var body = $('body');
-var event_fetch_url = '/content/api/event/';
-var $event_form = $("#event-form");
+var news_fetch_url = '/content/api/news/';
+var $news_form = $("#news-form");
 
-$("#event-time-date").datetimepicker({
-    locale: 'en',
-    sideBySide: true,
-    showClear: true,
-    showClose: true,
-    format: 'DD-MM-YYYY HH:mm',
-    useCurrent: false
+$news_form.bind('reset', function (e) {
+   $("#news-image-list").html("");
 });
 
-$event_form.bind('reset', function (e) {
-   $("#event-image-list").html("");
-});
-
-$event_form.submit(function (e) {
+$news_form.submit(function (e) {
     e.preventDefault();
-    var submit_url = "/content/add_event/";
+    var submit_url = "/content/add_news/";
     var data = new FormData($(this)[0]);
     $.ajax({
         url: submit_url,
@@ -31,11 +22,11 @@ $event_form.submit(function (e) {
         contentType: false,
         processData: false,
         success: function (data, textStatus, jqXHR) {
-            $("#event-form")[0].reset();
-            $("#event-error-list").empty();
-            fetch_events();
+            $("#news-form")[0].reset();
+            $("#news-error-list").empty();
+            fetch_news();
             $.notify({
-                message: 'Event updated successfully'
+                message: 'News updated successfully'
             }, {
                 type: 'success',
                 placement: {
@@ -46,7 +37,7 @@ $event_form.submit(function (e) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             var error_data = JSON.parse(jqXHR.responseText);
-            var error_list_selector = $("#event-error-list");
+            var error_list_selector = $("#news-error-list");
             error_list_selector.empty();
             $(".element-error").remove();
             for (var key in error_data) {
@@ -61,7 +52,7 @@ $event_form.submit(function (e) {
                     }
                 }
                 else{
-                    var element_form_group = $("#event-form input[name={0}]".format(key)).closest('.form-group');
+                    var element_form_group = $("#news-form input[name={0}]".format(key)).closest('.form-group');
                     var element_error_html = "<ul class=\"element-error\">";
                     for (var index in error_list){
                         var error = error_list[index];
@@ -76,67 +67,60 @@ $event_form.submit(function (e) {
 
 });
 
-function fetch_events() {
+function fetch_news() {
     $.ajax({
-        url: event_fetch_url,
+        url: news_fetch_url,
         success: function (data) {
-            $("#event-list").html(data);
+            $("#news-list").html(data);
         }
     });
 }
 
 $(function () {
-    fetch_events();
+    fetch_news();
 });
 
-function event_nav_control(event) {
-    event.preventDefault();
-    var href = $(event.target).attr('href');
+function news_nav_control(news) {
+    news.preventDefault();
+    var href = $(news.target).attr('href');
     if (href != "") {
-        event_fetch_url = href;
-        fetch_events();
+        news_fetch_url = href;
+        fetch_news();
     }
 }
 
-body.on('click', '#event-next', function (e) {
-    event_nav_control(e);
+body.on('click', '#news-next', function (e) {
+    news_nav_control(e);
     return false;
 });
 
-body.on('click', '#event-previous', function (e) {
-    event_nav_control(e);
+body.on('click', '#news-previous', function (e) {
+    news_nav_control(e);
     return false;
 });
 
-body.on('click', '.event-list-btn', function (e) {
+body.on('click', '.news-list-btn', function (e) {
     e.preventDefault();
     var elem = e.target;
     elem = $(elem);
     var id = elem.data('id');
     var description = elem.data('description');
     var category = elem.data('category');
-    var event_time = elem.data('event-time');
-    var event_place = elem.data('event-place');
     var designation = elem.data('designation');
     var title = elem.text();
-    var image = elem.data('event-image');
-    var event_image_list = $("#event-image-list");
+    var image = elem.data('news-image');
+    var news_image_list = $("#news-image-list");
 
-    var date = new Date(event_time);
-    var formatted_date = date.iitbAppFormat();
+    $("#news-id").val(id);
+    $("#news-title").val(title);
+    $("#news-description").val(description);
+    $("#news-category").val(category);
+    $("#news-designation").val(designation);
 
-    $("#event-id").val(id);
-    $("#event-title").val(title);
-    $("#event-description").val(description);
-    $("#event-category").val(category);
-    $("#event-time").val(formatted_date);
-    $("#event-place").val(event_place);
-    $("#event-designation").val(designation);
-
-    event_image_list.html("");
+    news_image_list.html("");
     var image_array = image.split(",");
     for (var index in image_array){
-        event_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
+        news_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
     }
 
 });

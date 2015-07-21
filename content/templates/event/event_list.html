@@ -3,7 +3,7 @@
         <button class="list-group-item btn btn-block event-list-btn" data-id="{{ result.id }}"
                 data-description="{{ result.description }}" data-category="{{ result.category }}"
                 data-event-time="{{ result.event_time }}" data-event-place="{{ result.event_place }}"
-                data-event-image="{{ result.images }}"
+                data-event-image="{{ result.images|safeseq|join:"," }}"
                 data-designation="{{ result.posted_by.id }}"> {{ result.title }}
         </button>
     {% endfor %}

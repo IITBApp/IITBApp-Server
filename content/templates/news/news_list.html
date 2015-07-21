@@ -1,0 +1,24 @@
+<div class="list-group">
+    {% for result in results %}
+        <button class="list-group-item btn btn-block news-list-btn" data-id="{{ result.id }}"
+                data-description="{{ result.description }}" data-category="{{ result.category }}"
+                data-news-image="{{ result.images|safeseq|join:"," }}"
+                data-designation="{{ result.posted_by.id }}"> {{ result.title }}
+        </button>
+    {% endfor %}
+</div>
+<hr>
+<nav>
+    <ul class="pager">
+        {% if previous %}
+            <li><a id="news-previous" href="{{ previous }}">Previous</a></li>
+        {% else %}
+            <li class="disabled"><a id="news-previous" href="">Previous</a></li>
+        {% endif %}
+        {% if next %}
+            <li><a id="news-next" href="{{ next }}">Next</a></li>
+        {% else %}
+            <li class="disabled"><a id="news-next" href="">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>

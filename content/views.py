@@ -5,6 +5,7 @@ from django.views.generic import View
 from forms.LoginForm import LoginForm
 from forms.NoticeForm import NoticeForm
 from forms.EventForm import EventForm
+from forms.NewsForm import NewsForm
 from django.contrib.auth import authenticate, login, logout
 from iitbapp.views import StrongholdPublicMixin
 from rest_framework.response import Response
@@ -16,6 +17,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from notice.models import Notice
 from event.serializers import EventReadSerializer
 from event.models import Event
+from news.serializers import NewsReadSerializer
+from news.models import News
 
 class IndexView(View):
 
@@ -49,6 +52,18 @@ class AddEventView(APIView):
             return Response(EventReadSerializer(event).data)
         else:
             return HttpResponseBadRequest(eventForm.errors.as_json(), content_type='application/json')
+
+class AddNewsView(APIView):
+
+    renderer_classes = (JSONRenderer, )
+
+    def post(self, request):
+        newsForm = NewsForm(request.user, request.POST, request.FILES)
+        if newsForm.is_valid():
+            news = newsForm.save()
+            return Response(NewsReadSerializer(news).data)
+        else:
+            return HttpResponseBadRequest(newsForm.errors.as_json(), content_type='application/json')
 
 
 class LoginView(StrongholdPublicMixin, View):
@@ -101,7 +116,7 @@ class UserNoticeViewset(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReadOnlyModelViewsetPaginator
     serializer_class = NoticeReadSerializer
     renderer_classes = (TemplateHTMLRenderer, )
-    template_name = 'notice_list.html'
+    template_name = 'notice/notice_list.html'
 
     def get_queryset(self):
         return Notice.objects.all().filter(posted_by__user=self.request.user)
@@ -111,9 +126,18 @@ class UserEventsViewset(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReadOnlyModelViewsetPaginator
     serializer_class = EventReadSerializer
     renderer_classes = (TemplateHTMLRenderer, )
-    template_name = 'event_list.html'
+    template_name = 'event/event_list.html'
 
     def get_queryset(self):
         return Event.objects.all().filter(posted_by__user=self.request.user)
 
+class UserNewsViewset(viewsets.ReadOnlyModelViewSet):
+
+    pagination_class = ReadOnlyModelViewsetPaginator
+    serializer_class = NewsReadSerializer
+    renderer_classes = (TemplateHTMLRenderer, )
+    template_name = 'news/news_list.html'
+
+    def get_queryset(self):
+        return News.objects.all().filter(posted_by__user=self.request.user)
 

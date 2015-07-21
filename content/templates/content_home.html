@@ -4,17 +4,20 @@
 {% block jsLinks %}
     <script src="{% static 'js/notice.js' %}" type="application/javascript"></script>
     <script src="{% static 'js/event.js' %}" type="application/javascript"></script>
+    <script src="{% static 'js/news.js' %}" type="application/javascript"></script>
 {% endblock %}
 
 {% block cssLinks %}
     <link href="{% static 'css/notice.css' %}" rel="stylesheet" type="text/css"/>
     <link href="{% static 'css/event.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/news.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block body %}
     <div id="tab-content" class="tab-content">
-        {% include 'event.html' %}
-        {% include 'notice.html' %}
+        {% include 'news/news.html' %}
+        {% include 'event/event.html' %}
+        {% include 'notice/notice.html' %}
     </div>
 {% endblock %}
 
