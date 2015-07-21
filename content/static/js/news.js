@@ -107,7 +107,7 @@ body.on('click', '.news-list-btn', function (e) {
     var description = elem.data('description');
     var category = elem.data('category');
     var designation = elem.data('designation');
-    var title = elem.text();
+    var title = elem.data('title');
     var image = elem.data('news-image');
     var news_image_list = $("#news-image-list");
 

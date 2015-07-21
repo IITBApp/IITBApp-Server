@@ -118,7 +118,7 @@ body.on('click', '.event-list-btn', function (e) {
     var event_time = elem.data('event-time');
     var event_place = elem.data('event-place');
     var designation = elem.data('designation');
-    var title = elem.text();
+    var title = elem.data('title');
     var image = elem.data('event-image');
     var event_image_list = $("#event-image-list");
 

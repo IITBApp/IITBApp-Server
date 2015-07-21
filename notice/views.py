@@ -8,14 +8,9 @@ class NoticePagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
 
-class NoticeViewset(viewsets.ModelViewSet):
+class NoticeViewset(viewsets.ReadOnlyModelViewSet):
 
     queryset = Notice.objects.all().order_by('-id')
     pagination_class = NoticePagination
-
-    def get_serializer_class(self):
-        if self.request.method in ['POST', 'PUT', 'PATCH']:
-            return NoticeWriteSerializer
-        else:
-            return NoticeReadSerializer
+    serializer_class = NoticeReadSerializer
 

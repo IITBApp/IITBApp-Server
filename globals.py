@@ -1,6 +1,6 @@
 __author__ = 'dheerendra'
 
-from django.db import models
+from gcm.models import get_device_model
 from PIL import Image
 
 categories = [
@@ -20,6 +20,9 @@ datetime_input_formats = [
      '%d-%m-%Y %H:%M',
 ]
 
+def send_android_push_notification(message):
+    Device = get_device_model()
+    Device.objects.all().send_message(message)
 
 def verify_image(image):
     try:

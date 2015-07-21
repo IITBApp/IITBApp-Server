@@ -1,8 +1,8 @@
 <div class="list-group">
     {% for result in results %}
         <button class="list-group-item btn btn-block notice-list-btn" data-id="{{ result.id }}"
-                data-description="{{ result.description }}" data-priority="{{ result.priority }}"
-                data-expiration-date="{{ result.expiration_date }}"
+                data-title="{{ result.title }}" data-description="{{ result.description }}"
+                data-priority="{{ result.priority }}" data-expiration-date="{{ result.expiration_date }}"
                 data-designation="{{ result.posted_by.id }}"> {{ result.title }}
         </button>
     {% endfor %}

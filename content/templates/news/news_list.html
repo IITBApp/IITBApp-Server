@@ -1,8 +1,8 @@
 <div class="list-group">
     {% for result in results %}
         <button class="list-group-item btn btn-block news-list-btn" data-id="{{ result.id }}"
-                data-description="{{ result.description }}" data-category="{{ result.category }}"
-                data-news-image="{{ result.images|safeseq|join:"," }}"
+                data-title="{{ result.title }}" data-description="{{ result.description }}"
+                data-category="{{ result.category }}" data-news-image="{{ result.images|safeseq|join:"," }}"
                 data-designation="{{ result.posted_by.id }}"> {{ result.title }}
         </button>
     {% endfor %}

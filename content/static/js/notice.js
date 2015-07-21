@@ -98,7 +98,7 @@ body.on('click', '.notice-list-btn', function(e){
     var priority = elem.data('priority');
     var expiration_date = elem.data('expiration-date');
     var designation = elem.data('designation');
-    var title = elem.text();
+    var title = elem.data('title');
 
     var date = new Date(expiration_date);
     var formatted_date = date.iitbAppFormat();
