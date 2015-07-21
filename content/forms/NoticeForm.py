@@ -1,15 +1,11 @@
 __author__ = 'dheerendra'
 
 from django import forms
-from globals import notice_priority
+from globals import notice_priority, datetime_input_formats
 from notice.models import Notice
 from authentication.models import Designation
 from django.utils.translation import gettext as _
 from django.utils import timezone
-
-datetime_input_formats = [
-     '%d-%m-%Y %H:%M',
-]
 
 class NoticeForm(forms.Form):
     id = forms.IntegerField(required=False)

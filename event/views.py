@@ -14,8 +14,8 @@ class EventPagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
 
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
+class EventViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Event.objects.all().order_by('-id')
     pagination_class = EventPagination
 
     def get_serializer_class(self):

@@ -15,17 +15,17 @@
                         <ul id="notice-error-list">
 
                         </ul>
-                        <div class="form-group" id="notice-title-div">
+                        <div class="form-group" id="notice-title-group">
                             <label for="notice-title">Title</label>
                             <input class="form-control" type="text" name="title" id="notice-title" placeholder="Title"
                                    required/>
                         </div>
-                        <div class="form-group" id="notice-description-div">
+                        <div class="form-group" id="notice-description-group">
                             <label for="notice-description">Description</label>
                             <textarea rows="3" class="form-control" name="description"
                                       id="notice-description" placeholder="Description"></textarea>
                         </div>
-                        <div class="form-group" id="notice-priority-div">
+                        <div class="form-group" id="notice-priority-group">
                             <label for="notice-priority">Priority</label>
                             <select class="form-control" name="priority" id="notice-priority">
                                 <option value="0" style="color:green">Low</option>
@@ -34,10 +34,10 @@
                                 <option value="3" style="color:red">Urgent</option>
                             </select>
                         </div>
-                        <div class="form-group" id="notice-expiry-div">
+                        <div class="form-group" id="notice-expiry-group">
                             <label for="expiry">Expiration</label>
 
-                            <div class="input-group date" id="notice-expiration-date">
+                            <div class="input-group date" id="notice-expiration-group">
                                 <input class="form-control" type="text" name="expiration_date"
                                        placeholder="dd-mm-yyyy HH:MM" id="notice-expiry"/>
                                 <span class="input-group-addon">
@@ -45,7 +45,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="notice-designation-group">
                             <label for="notice-designation">Post As</label>
                             <select class="form-control" name="designation" id="notice-designation">
                                 {% for designation in designations %}

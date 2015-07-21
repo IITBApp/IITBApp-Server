@@ -12,9 +12,9 @@ class NewsPagination(LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
 
-class NewsViewSet(viewsets.ModelViewSet):
+class NewsViewSet(viewsets.ReadOnlyModelViewSet):
 
-    queryset = News.objects.all()
+    queryset = News.objects.all().order_by('-id')
     pagination_class = NewsPagination
 
     def get_serializer_class(self):

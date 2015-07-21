@@ -16,6 +16,10 @@ categories = [
 
 notice_priority = [('0', 'Low'), ('1', 'Medium'), ('2', 'High'), ('3', 'Urgent')]
 
+datetime_input_formats = [
+     '%d-%m-%Y %H:%M',
+]
+
 
 def verify_image(image):
     try:

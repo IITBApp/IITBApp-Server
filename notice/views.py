@@ -10,7 +10,7 @@ class NoticePagination(LimitOffsetPagination):
 
 class NoticeViewset(viewsets.ModelViewSet):
 
-    queryset = Notice.objects.all()
+    queryset = Notice.objects.all().order_by('-id')
     pagination_class = NoticePagination
 
     def get_serializer_class(self):

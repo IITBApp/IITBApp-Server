@@ -1,0 +1,99 @@
+<div role="tabpanel" class="tab-pane fade" id="event-tab" aria-labelledby="event-tab">
+    <h1>Event
+        <small>Add or modify your events</small>
+    </h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Add/Update event
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="event-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" id="event-id" value="-1"/>
+                        <ul id="event-error-list">
+
+                        </ul>
+                        <div class="form-group" id="event-title-group">
+                            <label for="event-title">Title</label>
+                            <input class="form-control" type="text" name="title" id="event-title" placeholder="Title"
+                                   required/>
+                        </div>
+                        <div class="form-group" id="event-description-group">
+                            <label for="event-description">Description</label>
+                            <textarea rows="3" class="form-control" name="description"
+                                      id="event-description" placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group" id="event-category-group">
+                            <label for="event-description">Category</label>
+                            <select class="form-control" name="category" id="event-category">
+                                <option value="music">Music</option>
+                                <option value="photo">Photography</option>
+                                <option value="art">Fine Arts</option>
+                                <option value="sports">Sports</option>
+                                <option value="activity">Activity</option>
+                                <option value="tech">Tech</option>
+                                <option value="food">Food</option>
+                                <option value="literature">Literature</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="event-time-group">
+                            <label for="event-time">Event Time</label>
+
+                            <div class="input-group date" id="event-time-date">
+                                <input class="form-control" type="text" name="event_time"
+                                       placeholder="dd-mm-yyyy HH:MM" id="event-time"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="event-place-group">
+                            <label for="event-place">Event Place</label>
+                            <input class="form-control" type="text" name="event_place"
+                                   placeholder="F C Kohli Auditorium" id="event-place"/>
+                        </div>
+                        <div class="form-group" id="event-cancelled-group">
+                            <label for="event-cancelled">Cancelled</label>
+                            <input type="checkbox" name="cancelled" id="event-cancelled"/>
+                        </div>
+                        <div class="form-group" id="event-image-group">
+                            <label for="event-image-input">Event image</label>
+                            <input type="file" name="event_image" id="event-image" accept="image/*"/>
+                        </div>
+                        <div class="form-group" id="event-designation-group">
+                            <label for="event-designation">Post As</label>
+                            <select class="form-control" name="designation" id="event-designation">
+                                {% for designation in designations %}
+                                    <option value="{{ designation.id }}">{{ designation.post }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="event-add-btn">Submit</button>
+                            <button type="reset" class="btn btn-default" id="event-reset-btn">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Past events by you
+                </div>
+                <div class="panel-body">
+                    <div id="event-list">
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

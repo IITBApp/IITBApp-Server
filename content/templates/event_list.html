@@ -1,0 +1,25 @@
+<div class="list-group">
+    {% for result in results %}
+        <button class="list-group-item btn btn-block event-list-btn" data-id="{{ result.id }}"
+                data-description="{{ result.description }}" data-category="{{ result.category }}"
+                data-event-time="{{ result.event_time }}" data-event-place="{{ result.event_place }}"
+                data-event-image="{{ result.images }}"
+                data-designation="{{ result.posted_by.id }}"> {{ result.title }}
+        </button>
+    {% endfor %}
+</div>
+<hr>
+<nav>
+    <ul class="pager">
+        {% if previous %}
+            <li><a id="event-previous" href="{{ previous }}">Previous</a></li>
+        {% else %}
+            <li class="disabled"><a id="event-previous" href="">Previous</a></li>
+        {% endif %}
+        {% if next %}
+            <li><a id="event-next" href="{{ next }}">Next</a></li>
+        {% else %}
+            <li class="disabled"><a id="event-next" href="">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>

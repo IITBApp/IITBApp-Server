@@ -4,6 +4,7 @@ from django.http import HttpResponseBadRequest
 from django.views.generic import View
 from forms.LoginForm import LoginForm
 from forms.NoticeForm import NoticeForm
+from forms.EventForm import EventForm
 from django.contrib.auth import authenticate, login, logout
 from iitbapp.views import StrongholdPublicMixin
 from rest_framework.response import Response
@@ -13,6 +14,8 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from notice.models import Notice
+from event.serializers import EventReadSerializer
+from event.models import Event
 
 class IndexView(View):
 
@@ -34,6 +37,18 @@ class AddNoticeView(APIView):
             return Response(NoticeReadSerializer(notice).data)
         else:
             return HttpResponseBadRequest(noticeForm.errors.as_json(), content_type='application/json')
+
+class AddEventView(APIView):
+
+    renderer_classes = (JSONRenderer, )
+
+    def post(self, request):
+        eventForm = EventForm(request.user, request.POST, request.FILES)
+        if eventForm.is_valid():
+            event = eventForm.save()
+            return Response(EventReadSerializer(event).data)
+        else:
+            return HttpResponseBadRequest(eventForm.errors.as_json(), content_type='application/json')
 
 
 class LoginView(StrongholdPublicMixin, View):
@@ -90,5 +105,15 @@ class UserNoticeViewset(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Notice.objects.all().filter(posted_by__user=self.request.user)
+
+class UserEventsViewset(viewsets.ReadOnlyModelViewSet):
+
+    pagination_class = ReadOnlyModelViewsetPaginator
+    serializer_class = EventReadSerializer
+    renderer_classes = (TemplateHTMLRenderer, )
+    template_name = 'event_list.html'
+
+    def get_queryset(self):
+        return Event.objects.all().filter(posted_by__user=self.request.user)
 
 
