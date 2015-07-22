@@ -14,7 +14,7 @@ class EventForm(forms.Form):
     category = forms.ChoiceField(choices=categories)
     event_time = forms.DateTimeField(input_formats=datetime_input_formats)
     event_place = forms.CharField(max_length=256)
-    cancelled = forms.BooleanField()
+    cancelled = forms.BooleanField(required=False)
     event_image = forms.ImageField(required=False)
     designation = forms.IntegerField()
 
