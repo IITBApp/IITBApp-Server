@@ -23,11 +23,13 @@ from event import urls as event_urls
 from notice import urls as notice_urls
 from information import urls as information_urls
 from content import urls as content_urls
+import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^public/', include(information_urls)),
     url(r'^content/', include(content_urls)),
+    url(r'^logs/', views.logs),
     url(r'', include(authentication_urls)),
     url(r'', include(news_urls)),
     url(r'', include(event_urls)),
