@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_URL = '/content/login/'
+LOGIN_URL = 'login_page'
 
 CACHES = {
     'default': {
