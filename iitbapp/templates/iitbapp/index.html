@@ -1,0 +1,23 @@
+{% extends 'iitbapp/root.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" style="text-align: center">
+
+                <h1 style="font-size: 70px;">IITB App</h1>
+
+                <h2>An application for everything at IIT Bombay</h2>
+
+                <div><a href="https://play.google.com/store/apps/details?id=com.iitblive.iitblive&hl=en"><img
+                        src="{% static 'img/en_generic_rgb_wo_60.png' %}"></a></div>
+                <div>
+                    <h3>If you're a content creator then go to login page</h3>
+                </div>
+                <a href="/content/login/" class="btn btn-success btn-lg">Login</a>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

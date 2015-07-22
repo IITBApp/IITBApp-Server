@@ -221,6 +221,10 @@ STRONGHOLD_PUBLIC_URLS = (
     r'^/gcm',
 )
 
+STRONGHOLD_PUBLIC_NAMED_URLS = (
+    'index_page',
+)
+
 # User specific settings
 EMAIL_HOST = config.EMAIL_HOST
 EMAIL_PORT = config.EMAIL_PORT

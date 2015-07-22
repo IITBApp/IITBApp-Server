@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^public/', include(information_urls)),
     url(r'^content/', include(content_urls)),
     url(r'^logs/', views.logs),
+    url(r'^$', views.index, name='index_page'),
     url(r'', include(authentication_urls)),
     url(r'', include(news_urls)),
     url(r'', include(event_urls)),

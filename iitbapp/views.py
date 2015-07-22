@@ -5,12 +5,18 @@ from stronghold.decorators import public
 from django.http import HttpResponse
 from django.conf import settings
 import os
+from django.shortcuts import render
 
 class StrongholdPublicMixin(object):
 
     @method_decorator(public)
     def dispatch(self, *args, **kwargs):
         return super(StrongholdPublicMixin, self).dispatch(*args, **kwargs)
+
+
+def index(request):
+
+    return render(request, 'iitbapp/index.html', {})
 
 
 def logs(request):

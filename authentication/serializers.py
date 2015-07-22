@@ -2,9 +2,7 @@ __author__ = 'dheerenr'
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from models import Designation
-from uuid import uuid4
 from datetime import datetime
-import sys
 
 class UserSerializer(serializers.ModelSerializer):
     employeeNumber = serializers.CharField(max_length=16, source='username')
