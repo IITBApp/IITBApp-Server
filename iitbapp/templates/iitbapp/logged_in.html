@@ -13,8 +13,8 @@
             </li>
         </ul>
     </li>
-    <li><a href="/"><strong>{{ request.user.first_name }}</strong></a></li>
-    <li><a href="/content/logout">Logout</a></li>
+    <li><a ><strong>{{ request.user.first_name }}</strong></a></li>
+    <li><a href="{% url 'logout_page' %}">Logout</a></li>
 {% endblock %}
 
 
