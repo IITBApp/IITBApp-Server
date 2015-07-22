@@ -6,6 +6,8 @@ from authentication.models import Designation
 from django.utils.translation import gettext as _
 from django.utils import timezone
 from globals import categories, datetime_input_formats
+import event.signals as event_signals
+
 
 class EventForm(forms.Form):
     id = forms.IntegerField(required=False)
@@ -57,6 +59,7 @@ class EventForm(forms.Form):
         event_image = self.cleaned_data.get('event_image')
         designation = self.cleaned_data.get('designation')
         if id is not None and id != -1:
+            created = False
             event = Event.objects.get(pk=id)
             event.title = title
             event.description = description
@@ -66,6 +69,7 @@ class EventForm(forms.Form):
             event.cancelled = cancelled
             event.posted_by_id = designation
         else:
+            created=True
             event = Event(title=title,
                             description=description,
                             category=category,
@@ -88,4 +92,5 @@ class EventForm(forms.Form):
                     image=event_image
                 )
             eventImage.save()
+        event_signals.event_done.send(Event, instance=event, created=created)
         return event

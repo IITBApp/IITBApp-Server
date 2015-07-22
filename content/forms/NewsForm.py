@@ -5,6 +5,7 @@ from news.models import News, NewsImage
 from authentication.models import Designation
 from django.utils.translation import gettext as _
 from globals import categories
+import news.signals as news_signals
 
 
 class NewsForm(forms.Form):
@@ -48,12 +49,14 @@ class NewsForm(forms.Form):
         news_image = self.cleaned_data.get('news_image')
         designation = self.cleaned_data.get('designation')
         if id_ is not None and id_ != -1:
+            created = False
             news = News.objects.get(pk=id_)
             news.title = title
             news.description = description
             news.category = category
             news.posted_by_id = designation
         else:
+            created = True
             news = News(title=title,
                         description=description,
                         category=category,
@@ -74,4 +77,5 @@ class NewsForm(forms.Form):
                     image=news_image
                 )
             newsImage.save()
+        news_signals.news_done.send(News, instance=news, created=created)
         return news

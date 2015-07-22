@@ -2,10 +2,10 @@ __author__ = 'dheerendra'
 
 from serializers import EventReadSerializer
 from models import Event
-from django.db.models import signals
 import logging
 import json
 from globals import send_android_push_notification
+import django.dispatch
 
 logger = logging.getLogger(__name__)
 
@@ -26,4 +26,7 @@ def send_event_push_notification(sender, instance, created, **kwargs):
     logger.info("Android push sent for event with id %d with message %s", instance.id, message)
 
 
-signals.post_save.connect(send_event_push_notification, Event)
+event_done = django.dispatch.Signal(providing_args=['created', 'instance'])
+
+event_done.connect(send_event_push_notification, Event)
+

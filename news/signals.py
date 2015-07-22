@@ -2,7 +2,7 @@ __author__ = 'dheerendra'
 
 from serializers import NewsReadSerializer
 from models import News
-from django.db.models import signals
+import django.dispatch
 import logging
 import json
 from globals import send_android_push_notification
@@ -26,4 +26,5 @@ def send_news_push_notification(sender, instance, created, **kwargs):
     logger.info("Android push sent for news with id %d with message %s", instance.id, message)
 
 
-signals.post_save.connect(send_news_push_notification, News)
+news_done = django.dispatch.Signal(providing_args=['instance', 'created'])
+news_done.connect(send_news_push_notification, News)
