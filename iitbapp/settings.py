@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'gcm',
-    'stronghold',
     'authentication',
     'news',
     'event',
@@ -68,7 +67,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'stronghold.middleware.LoginRequiredMiddleware',
 )
 
 ROOT_URLCONF = 'iitbapp.urls'
@@ -212,19 +210,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
-
-#Strong hold settings
-STRONGHOLD_PUBLIC_URLS = (
-    r'^/api',
-    r'^/public',
-    r'^/admin',
-    r'^/gcm',
-)
-
-STRONGHOLD_PUBLIC_NAMED_URLS = (
-    'index_page',
-    'about_page',
-)
 
 # User specific settings
 EMAIL_HOST = config.EMAIL_HOST

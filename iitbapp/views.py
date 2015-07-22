@@ -1,17 +1,17 @@
 __author__ = 'dheerendra'
 
 from django.utils.decorators import method_decorator
-from stronghold.decorators import public
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.conf import settings
 import os
 from django.shortcuts import render
 
-class StrongholdPublicMixin(object):
+class LoginRequiredMixin(object):
 
-    @method_decorator(public)
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(StrongholdPublicMixin, self).dispatch(*args, **kwargs)
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 
 def index(request):

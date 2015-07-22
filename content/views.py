@@ -7,7 +7,7 @@ from forms.NoticeForm import NoticeForm
 from forms.EventForm import EventForm
 from forms.NewsForm import NewsForm
 from django.contrib.auth import authenticate, login, logout
-from iitbapp.views import StrongholdPublicMixin
+from iitbapp.views import LoginRequiredMixin
 from rest_framework.response import Response
 from notice.serializers import NoticeReadSerializer
 from rest_framework.views import APIView
@@ -20,7 +20,7 @@ from event.models import Event
 from news.serializers import NewsReadSerializer
 from news.models import News
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
 
     template_name = 'content_home.html'
 
@@ -29,7 +29,7 @@ class IndexView(View):
         active_designations = [designation for designation in designations if designation.is_active()]
         return render(request, self.template_name, {'designations': active_designations})
 
-class AddNoticeView(APIView):
+class AddNoticeView(LoginRequiredMixin, APIView):
 
     renderer_classes = (JSONRenderer, )
 
@@ -41,7 +41,7 @@ class AddNoticeView(APIView):
         else:
             return HttpResponseBadRequest(noticeForm.errors.as_json(), content_type='application/json')
 
-class AddEventView(APIView):
+class AddEventView(LoginRequiredMixin, APIView):
 
     renderer_classes = (JSONRenderer, )
 
@@ -53,7 +53,7 @@ class AddEventView(APIView):
         else:
             return HttpResponseBadRequest(eventForm.errors.as_json(), content_type='application/json')
 
-class AddNewsView(APIView):
+class AddNewsView(LoginRequiredMixin, APIView):
 
     renderer_classes = (JSONRenderer, )
 
@@ -66,7 +66,7 @@ class AddNewsView(APIView):
             return HttpResponseBadRequest(newsForm.errors.as_json(), content_type='application/json')
 
 
-class LoginView(StrongholdPublicMixin, View):
+class LoginView(View):
 
     template_name = 'login.html'
 
@@ -99,7 +99,7 @@ class LoginView(StrongholdPublicMixin, View):
                 form.add_error(None, "Unable to authenticate. Please check username/password")
         return render(request, self.template_name, {'form': form})
 
-class LogoutView(StrongholdPublicMixin, View):
+class LogoutView(View):
 
     def get(self, request):
         logout(request)
