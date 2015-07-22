@@ -15,8 +15,11 @@ class StrongholdPublicMixin(object):
 
 
 def index(request):
-
     return render(request, 'iitbapp/index.html', {})
+
+
+def about(request):
+    return render(request, 'iitbapp/about.html', {})
 
 
 def logs(request):

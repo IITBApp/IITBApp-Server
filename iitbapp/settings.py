@@ -223,6 +223,7 @@ STRONGHOLD_PUBLIC_URLS = (
 
 STRONGHOLD_PUBLIC_NAMED_URLS = (
     'index_page',
+    'about_page',
 )
 
 # User specific settings
