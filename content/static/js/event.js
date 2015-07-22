@@ -2,7 +2,8 @@
  * Created by dheerendra on 21/7/15.
  */
 var body = $('body');
-var event_fetch_url = '/content/api/event/';
+var fetch_event_url;
+var add_event_url;
 var $event_form = $("#event-form");
 
 $("#event-time-date").datetimepicker({
@@ -20,7 +21,7 @@ $event_form.bind('reset', function (e) {
 
 $event_form.submit(function (e) {
     e.preventDefault();
-    var submit_url = "/content/add_event/";
+    var submit_url = add_event_url;
     var data = new FormData($(this)[0]);
     $.ajax({
         url: submit_url,
@@ -78,7 +79,7 @@ $event_form.submit(function (e) {
 
 function fetch_events() {
     $.ajax({
-        url: event_fetch_url,
+        url: fetch_event_url,
         success: function (data) {
             $("#event-list").html(data);
         }
@@ -93,7 +94,7 @@ function event_nav_control(event) {
     event.preventDefault();
     var href = $(event.target).attr('href');
     if (href != "") {
-        event_fetch_url = href;
+        fetch_event_url = href;
         fetch_events();
     }
 }

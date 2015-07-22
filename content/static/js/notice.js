@@ -3,7 +3,8 @@
  */
 
 var body = $('body');
-var notice_fetch_url = '/content/api/notice/';
+var fetch_notice_url;
+var add_notice_url;
 
 $("#notice-expiration-date").datetimepicker({
     locale: 'en',
@@ -16,7 +17,7 @@ $("#notice-expiration-date").datetimepicker({
 
 $("#notice-form").submit(function(e){
     e.preventDefault();
-    var submit_url = "/content/add_notice/";
+    var submit_url = add_notice_url;
     var data = $(this).serialize();
     $.ajax({
         url: submit_url,
@@ -59,7 +60,7 @@ $("#notice-form").submit(function(e){
 
 function fetch_notices(){
     $.ajax({
-        url: notice_fetch_url,
+        url: fetch_notice_url,
         success: function(data){
             $("#notice-list").html(data);
         }
@@ -74,7 +75,7 @@ function notice_nav_control(event){
     event.preventDefault();
     var href = $(event.target).attr('href');
     if (href != ""){
-        notice_fetch_url = href;
+        fetch_notice_url = href;
         fetch_notices();
     }
 }

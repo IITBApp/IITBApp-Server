@@ -2,7 +2,8 @@
  * Created by dheerendra on 21/7/15.
  */
 var body = $('body');
-var news_fetch_url = '/content/api/news/';
+var fetch_news_url;
+var add_news_url;
 var $news_form = $("#news-form");
 
 $news_form.bind('reset', function (e) {
@@ -11,7 +12,7 @@ $news_form.bind('reset', function (e) {
 
 $news_form.submit(function (e) {
     e.preventDefault();
-    var submit_url = "/content/add_news/";
+    var submit_url = add_news_url;
     var data = new FormData($(this)[0]);
     $.ajax({
         url: submit_url,
@@ -69,7 +70,7 @@ $news_form.submit(function (e) {
 
 function fetch_news() {
     $.ajax({
-        url: news_fetch_url,
+        url: fetch_news_url,
         success: function (data) {
             $("#news-list").html(data);
         }
@@ -84,7 +85,7 @@ function news_nav_control(news) {
     news.preventDefault();
     var href = $(news.target).attr('href');
     if (href != "") {
-        news_fetch_url = href;
+        fetch_news_url = href;
         fetch_news();
     }
 }

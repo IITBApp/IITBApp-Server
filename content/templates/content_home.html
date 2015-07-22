@@ -2,6 +2,14 @@
 {% load static %}
 
 {% block jsLinks %}
+    <script type="application/javascript">
+        var fetch_event_url = "{% url 'content_event-list' %}";
+        var fetch_news_url = "{% url 'content_news-list' %}";
+        var fetch_notice_url = "{% url 'content_notice-list' %}";
+        var add_event_url = "{% url 'add_content_event' %}";
+        var add_news_url = "{% url 'add_content_news' %}";
+        var add_notice_url = "{% url 'add_content_notice' %}";
+    </script>
     <script src="{% static 'js/notice.js' %}" type="application/javascript"></script>
     <script src="{% static 'js/event.js' %}" type="application/javascript"></script>
     <script src="{% static 'js/news.js' %}" type="application/javascript"></script>
