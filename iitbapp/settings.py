@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import settings_user as config
 import logging.config
+import socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -123,11 +124,7 @@ MANAGERS = ADMINS
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'iitbapp/media/')
 
-MEDIA_URL = '/media/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'iitbapp/staticfiles/')
-
-STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
