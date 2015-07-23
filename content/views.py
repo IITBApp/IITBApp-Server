@@ -19,6 +19,8 @@ from event.serializers import EventReadSerializer
 from event.models import Event
 from news.serializers import NewsReadSerializer
 from news.models import News
+from authentication.views import authenticate_ldap
+from authentication.serializers import UserSerializer
 
 class IndexView(LoginRequiredMixin, View):
 
@@ -82,7 +84,16 @@ class LoginView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
-            user = authenticate(username=username, password=password)
+            response_data = authenticate_ldap(username, password)
+
+            user = None
+
+            if not response_data['error']:
+                user_serialized = UserSerializer(data=response_data)
+                if user_serialized.is_valid():
+                    user = user_serialized.save()
+
+#            user = authenticate(username=username, password=password)
             if user is not None and user.is_authenticated():
                 designations = user.designations.all()
                 have_active_designation = any([designation.is_active() for designation in designations])
