@@ -12,7 +12,7 @@ class TokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 #            raise exceptions.AuthenticationFailed('Token is not present')
-        if token != "ctE6NBxTfO9DE1a0onCDcJfyZyMhAQXqgCknqNz8Q":
+        if token != settings.TOKEN_AUTH:
             return None
 #            raise exceptions.AuthenticationFailed('Invalid Token')
 
