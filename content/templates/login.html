@@ -1,4 +1,5 @@
 {% extends "iitbapp/root.html" %}
+{% load static %}
 
 {% block title %}
     IITB App
@@ -9,6 +10,7 @@
             <div class="row">
                 <div class="col-md-6" style="margin-top: 20%;">
                     <center>
+                        <img src="{% static 'img/brand_iitbapp.png' %}" alt="ITIB app logo">
                         <h1 style="font-size: 70px;">IITB App</h1>
                         <h2>An application for everything at IIT Bombay</h2>
                     </center>

@@ -23,6 +23,9 @@
 
 {% block body %}
     <div id="tab-content" class="tab-content">
+        <div role="tabpanel" class="tab-pane fade active in" id="content-home-tab" aria-labelledby="content-home-tab">
+            <h1>To Add or Update News/Events/Notices, click on Create/Update button on upper right corner</h1>
+        </div>
         {% include 'news/news.html' %}
         {% include 'event/event.html' %}
         {% include 'notice/notice.html' %}

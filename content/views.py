@@ -22,8 +22,8 @@ from news.models import News
 from authentication.views import authenticate_ldap
 from authentication.serializers import UserSerializer
 
-class IndexView(LoginRequiredMixin, View):
 
+class IndexView(LoginRequiredMixin, View):
     template_name = 'content_home.html'
 
     def get(self, request):
@@ -31,9 +31,9 @@ class IndexView(LoginRequiredMixin, View):
         active_designations = [designation for designation in designations if designation.is_active()]
         return render(request, self.template_name, {'designations': active_designations})
 
-class AddNoticeView(LoginRequiredMixin, APIView):
 
-    renderer_classes = (JSONRenderer, )
+class AddNoticeView(LoginRequiredMixin, APIView):
+    renderer_classes = (JSONRenderer,)
 
     def post(self, request):
         noticeForm = NoticeForm(request.user, request.POST)
@@ -43,9 +43,9 @@ class AddNoticeView(LoginRequiredMixin, APIView):
         else:
             return HttpResponseBadRequest(noticeForm.errors.as_json(), content_type='application/json')
 
-class AddEventView(LoginRequiredMixin, APIView):
 
-    renderer_classes = (JSONRenderer, )
+class AddEventView(LoginRequiredMixin, APIView):
+    renderer_classes = (JSONRenderer,)
 
     def post(self, request):
         eventForm = EventForm(request.user, request.POST, request.FILES)
@@ -55,9 +55,9 @@ class AddEventView(LoginRequiredMixin, APIView):
         else:
             return HttpResponseBadRequest(eventForm.errors.as_json(), content_type='application/json')
 
-class AddNewsView(LoginRequiredMixin, APIView):
 
-    renderer_classes = (JSONRenderer, )
+class AddNewsView(LoginRequiredMixin, APIView):
+    renderer_classes = (JSONRenderer,)
 
     def post(self, request):
         newsForm = NewsForm(request.user, request.POST, request.FILES)
@@ -69,7 +69,6 @@ class AddNewsView(LoginRequiredMixin, APIView):
 
 
 class LoginView(View):
-
     template_name = 'login.html'
 
     def get(self, request):
@@ -94,7 +93,7 @@ class LoginView(View):
                     user = user_serialized.save()
                     user.backend = "django.contrib.auth.backends.ModelBackend"
 
-#            user = authenticate(username=username, password=password)
+                #            user = authenticate(username=username, password=password)
             if user is not None and user.is_authenticated():
                 designations = user.designations.all()
                 have_active_designation = any([designation.is_active() for designation in designations])
@@ -104,52 +103,51 @@ class LoginView(View):
                     if next is not None:
                         return redirect(next)
                 else:
-                    form.add_error(None, "Unable to authenticate. No active PoR found")
+                    form.add_error(None,
+                                   "You don't have content creation access. If you wish to get permissions, please contact Aman Gour")
                     return render(request, self.template_name, {'form': form})
                 return redirect('content_home')
             else:
                 form.add_error(None, "Unable to authenticate. Please check username/password")
         return render(request, self.template_name, {'form': form})
 
-class LogoutView(View):
 
+class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login_page')
 
 
 class ReadOnlyModelViewsetPaginator(LimitOffsetPagination):
-
     default_limit = 10
     max_limit = 50
 
-class UserNoticeViewset(viewsets.ReadOnlyModelViewSet):
 
+class UserNoticeViewset(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReadOnlyModelViewsetPaginator
     serializer_class = NoticeReadSerializer
-    renderer_classes = (TemplateHTMLRenderer, )
+    renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'notice/notice_list.html'
 
     def get_queryset(self):
         return Notice.objects.all().filter(posted_by__user=self.request.user)
 
-class UserEventsViewset(viewsets.ReadOnlyModelViewSet):
 
+class UserEventsViewset(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReadOnlyModelViewsetPaginator
     serializer_class = EventReadSerializer
-    renderer_classes = (TemplateHTMLRenderer, )
+    renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'event/event_list.html'
 
     def get_queryset(self):
         return Event.objects.all().filter(posted_by__user=self.request.user)
 
-class UserNewsViewset(viewsets.ReadOnlyModelViewSet):
 
+class UserNewsViewset(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReadOnlyModelViewsetPaginator
     serializer_class = NewsReadSerializer
-    renderer_classes = (TemplateHTMLRenderer, )
+    renderer_classes = (TemplateHTMLRenderer,)
     template_name = 'news/news_list.html'
 
     def get_queryset(self):
         return News.objects.all().filter(posted_by__user=self.request.user)
-
