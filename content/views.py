@@ -92,6 +92,7 @@ class LoginView(View):
                 user_serialized = UserSerializer(data=response_data)
                 if user_serialized.is_valid():
                     user = user_serialized.save()
+                    user.backend = "django.contrib.auth.backends.ModelBackend"
 
 #            user = authenticate(username=username, password=password)
             if user is not None and user.is_authenticated():
