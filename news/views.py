@@ -36,7 +36,8 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             news = serializer.data['news']
             user = serializer.data['user']
             NewsLike.objects.all().filter(news=news).filter(user=user).delete()
-            return Response({'status': 'deleted'})
+            likes = NewsLike.objects.all().filter(news=news).count()
+            return Response({'status': 'deleted', 'likes': likes})
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

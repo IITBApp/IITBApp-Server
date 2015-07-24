@@ -36,7 +36,8 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             event = serializer.data['event']
             user = serializer.data['user']
             EventLike.objects.all().filter(event=event).filter(user=user).delete()
-            return Response({'status': 'deleted'})
+            likes = EventLike.objects.all().filter(news=event).count()
+            return Response({'status': 'deleted', 'likes': likes})
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

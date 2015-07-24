@@ -25,6 +25,7 @@ class EventReadSerializer(EventWriteSerializer):
 
 class EventLikeSerializer(serializers.ModelSerializer):
     liked = serializers.SerializerMethodField()
+    likes = serializers.IntegerField(source='event.likes.count', read_only=True)
 
     def get_liked(self, obj):
         if self.context.get('liked') is not None:
@@ -37,6 +38,7 @@ class EventLikeSerializer(serializers.ModelSerializer):
 
 class EventViewSerializer(serializers.ModelSerializer):
     viewed = serializers.SerializerMethodField()
+    views = serializers.IntegerField(source='event.views.count')
 
     def get_viewed(self, obj):
         if self.context.get('viewed') is not None:

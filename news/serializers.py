@@ -25,6 +25,7 @@ class NewsReadSerializer(NewsWriteSerializer):
 
 class NewsLikeSerializer(serializers.ModelSerializer):
     liked = serializers.SerializerMethodField()
+    likes = serializers.IntegerField(source='news.likes.count', read_only=True)
 
     def get_liked(self, obj):
         if self.context.get('liked') is not None:
@@ -37,6 +38,7 @@ class NewsLikeSerializer(serializers.ModelSerializer):
 
 class NewsViewSerializer(serializers.ModelSerializer):
     viewed = serializers.SerializerMethodField()
+    views = serializers.IntegerField(source='news.views.count', read_only=True)
 
     def get_viewed(self, obj):
         if self.context.get('viewed') is not None:
