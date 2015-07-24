@@ -35,7 +35,7 @@ class EventViewSerializer(serializers.ModelSerializer):
     liked = serializers.SerializerMethodField()
 
     def get_liked(self, obj):
-        if isinstance(obj, EventViews)
+        if isinstance(obj, EventViews):
             event = obj.event
             user = obj.user
             return EventLike.objects.all().filter(news=event).filter(user=user).exists()
