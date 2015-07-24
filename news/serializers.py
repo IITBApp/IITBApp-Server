@@ -39,6 +39,14 @@ class NewsLikeSerializer(serializers.ModelSerializer):
 class NewsViewSerializer(serializers.ModelSerializer):
     viewed = serializers.SerializerMethodField()
     views = serializers.IntegerField(source='news.views.count', read_only=True)
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self, obj):
+        if isinstance(obj, NewsViews):
+            news = obj.news
+            user = obj.user
+            return NewsLike.objects.all().filter(news=news).filter(user=user).exists()
+        return False
 
     def get_viewed(self, obj):
         if self.context.get('viewed') is not None:

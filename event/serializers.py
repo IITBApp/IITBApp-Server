@@ -39,6 +39,12 @@ class EventLikeSerializer(serializers.ModelSerializer):
 class EventViewSerializer(serializers.ModelSerializer):
     viewed = serializers.SerializerMethodField()
     views = serializers.IntegerField(source='event.views.count')
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self, obj):
+        event = obj.event
+        user = obj.user
+        return EventLike.objects.all().filter(news=event).filter(user=user).exists()
 
     def get_viewed(self, obj):
         if self.context.get('viewed') is not None:
