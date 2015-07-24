@@ -31,7 +31,7 @@ class EventLikeSerializer(serializers.ModelSerializer):
 
 
 class EventViewSerializer(serializers.ModelSerializer):
-    views = serializers.IntegerField(source='event.views.count')
+    views = serializers.IntegerField(source='event.views.count', read_only=True)
     liked = serializers.SerializerMethodField()
 
     def get_liked(self, obj):
