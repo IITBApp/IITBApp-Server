@@ -31,13 +31,15 @@ class EventLikeSerializer(serializers.ModelSerializer):
 
 
 class EventViewSerializer(serializers.ModelSerializer):
-    views = serializers.IntegerField(source='event.views.count')
+    views = serializers.IntegerField(source='event.views.count', read_only=True)
     liked = serializers.SerializerMethodField()
 
     def get_liked(self, obj):
-        event = obj.event
-        user = obj.user
-        return EventLike.objects.all().filter(news=event).filter(user=user).exists()
+        if isinstance(obj, EventViews)
+            event = obj.event
+            user = obj.user
+            return EventLike.objects.all().filter(news=event).filter(user=user).exists()
+        return False
 
     class Meta:
         model = EventViews
