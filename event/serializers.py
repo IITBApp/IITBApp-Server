@@ -38,7 +38,7 @@ class EventViewSerializer(serializers.ModelSerializer):
         if isinstance(obj, EventViews):
             event = obj.event
             user = obj.user
-            return EventLike.objects.all().filter(news=event).filter(user=user).exists()
+            return EventLike.objects.all().filter(event=event).filter(user=user).exists()
         return False
 
     class Meta:
