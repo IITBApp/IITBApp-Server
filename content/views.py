@@ -1,19 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest
-
 from django.views.generic import View
-from forms.LoginForm import LoginForm
-from forms.NoticeForm import NoticeForm
-from forms.EventForm import EventForm
-from forms.NewsForm import NewsForm
-from django.contrib.auth import authenticate, login, logout
-from iitbapp.views import LoginRequiredMixin
+from django.contrib.auth import login, logout
 from rest_framework.response import Response
-from notice.serializers import NoticeReadSerializer
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
+
+from forms.LoginForm import LoginForm
+from forms.NoticeForm import NoticeForm
+from forms.EventForm import EventForm
+from forms.NewsForm import NewsForm
+from iitbapp.views import LoginRequiredMixin
+from notice.serializers import NoticeReadSerializer
 from notice.models import Notice
 from event.serializers import EventReadSerializer
 from event.models import Event
@@ -36,36 +36,36 @@ class AddNoticeView(LoginRequiredMixin, APIView):
     renderer_classes = (JSONRenderer,)
 
     def post(self, request):
-        noticeForm = NoticeForm(request.user, request.POST)
-        if noticeForm.is_valid():
-            notice = noticeForm.save()
+        notice_form = NoticeForm(request.user, request.POST)
+        if notice_form.is_valid():
+            notice = notice_form.save()
             return Response(NoticeReadSerializer(notice).data)
         else:
-            return HttpResponseBadRequest(noticeForm.errors.as_json(), content_type='application/json')
+            return HttpResponseBadRequest(notice_form.errors.as_json(), content_type='application/json')
 
 
 class AddEventView(LoginRequiredMixin, APIView):
     renderer_classes = (JSONRenderer,)
 
     def post(self, request):
-        eventForm = EventForm(request.user, request.POST, request.FILES)
-        if eventForm.is_valid():
-            event = eventForm.save()
+        event_form = EventForm(request.user, request.POST, request.FILES)
+        if event_form.is_valid():
+            event = event_form.save()
             return Response(EventReadSerializer(event).data)
         else:
-            return HttpResponseBadRequest(eventForm.errors.as_json(), content_type='application/json')
+            return HttpResponseBadRequest(event_form.errors.as_json(), content_type='application/json')
 
 
 class AddNewsView(LoginRequiredMixin, APIView):
     renderer_classes = (JSONRenderer,)
 
     def post(self, request):
-        newsForm = NewsForm(request.user, request.POST, request.FILES)
-        if newsForm.is_valid():
-            news = newsForm.save()
+        news_form = NewsForm(request.user, request.POST, request.FILES)
+        if news_form.is_valid():
+            news = news_form.save()
             return Response(NewsReadSerializer(news).data)
         else:
-            return HttpResponseBadRequest(newsForm.errors.as_json(), content_type='application/json')
+            return HttpResponseBadRequest(news_form.errors.as_json(), content_type='application/json')
 
 
 class LoginView(View):
@@ -93,18 +93,19 @@ class LoginView(View):
                     user = user_serialized.save()
                     user.backend = "django.contrib.auth.backends.ModelBackend"
 
-                #            user = authenticate(username=username, password=password)
+                    #            user = authenticate(username=username, password=password)
             if user is not None and user.is_authenticated():
                 designations = user.designations.all()
                 have_active_designation = any([designation.is_active() for designation in designations])
                 if have_active_designation:
                     login(request, user)
-                    next = request.GET.get('next')
-                    if next is not None:
-                        return redirect(next)
+                    next_ = request.GET.get('next')
+                    if next_ is not None:
+                        return redirect(next_)
                 else:
                     form.add_error(None,
-                                   "You don't have content creation access. If you wish to get permissions, please contact Aman Gour")
+                                   "You don't have content creation access. "
+                                   "If you wish to get permissions, please contact Aman Gour")
                     return render(request, self.template_name, {'form': form})
                 return redirect('content_home')
             else:
@@ -113,6 +114,7 @@ class LoginView(View):
 
 
 class LogoutView(View):
+
     def get(self, request):
         logout(request)
         return redirect('login_page')

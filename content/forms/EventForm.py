@@ -25,16 +25,17 @@ class EventForm(forms.Form):
         self.user = user
 
     def clean(self):
-        '''
+        """
         Validation on the basis of
         1. id should be -1 or None. If anything else is present as id then current user should be owner of that item
         2. designation should belongs to the user who is adding/modifying item
         :return: cleaned_data
-        '''
+        """
+
         cleaned_data = super(EventForm, self).clean()
-        id = cleaned_data.get('id')
-        if id is not None and id != -1:
-            event = Event.objects.all().filter(posted_by__user=self.user).filter(id=id)
+        id_ = cleaned_data.get('id')
+        if id_ is not None and id_ != -1:
+            event = Event.objects.all().filter(posted_by__user=self.user).filter(id=id_)
             if not event.exists():
                 raise forms.ValidationError(_('Unauthorised access on event'), code='InvalidAccess')
         designation = Designation.objects.all().filter(user=self.user).filter(pk=cleaned_data['designation'])
@@ -49,7 +50,7 @@ class EventForm(forms.Form):
         return cleaned_data
 
     def save(self):
-        id = self.cleaned_data.get('id')
+        id_ = self.cleaned_data.get('id')
         title = self.cleaned_data.get('title')
         description = self.cleaned_data.get('description')
         category = self.cleaned_data.get('category')
@@ -58,9 +59,9 @@ class EventForm(forms.Form):
         cancelled = self.cleaned_data.get('cancelled')
         event_image = self.cleaned_data.get('event_image')
         designation = self.cleaned_data.get('designation')
-        if id is not None and id != -1:
+        if id_ is not None and id_ != -1:
             created = False
-            event = Event.objects.get(pk=id)
+            event = Event.objects.get(pk=id_)
             event.title = title
             event.description = description
             event.category = category
@@ -69,14 +70,14 @@ class EventForm(forms.Form):
             event.cancelled = cancelled
             event.posted_by_id = designation
         else:
-            created=True
+            created = True
             event = Event(title=title,
-                            description=description,
-                            category=category,
-                            event_time=event_time,
-                            event_place=event_place,
-                            cancelled=cancelled,
-                            posted_by_id=designation)
+                          description=description,
+                          category=category,
+                          event_time=event_time,
+                          event_place=event_place,
+                          cancelled=cancelled,
+                          posted_by_id=designation)
         event.save()
         if event_image is not None and event_image.image is not None:
             '''

@@ -7,6 +7,7 @@ from authentication.models import Designation
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
+
 class NoticeForm(forms.Form):
     id = forms.IntegerField(required=False)
     title = forms.CharField(max_length=256)
@@ -20,16 +21,16 @@ class NoticeForm(forms.Form):
         self.user = user
 
     def clean(self):
-        '''
+        """
         Validation on the basis of
         1. id should be -1 or None. If anything else is present as id then current user should be owner of that item
         2. designation should belongs to the user who is adding/modifying item
         :return: cleaned_data
-        '''
+        """
         cleaned_data = super(NoticeForm, self).clean()
-        id = cleaned_data.get('id')
-        if id is not None and id != -1:
-            notice = Notice.objects.all().filter(posted_by__user=self.user).filter(id=id)
+        id_ = cleaned_data.get('id')
+        if id_ is not None and id_ != -1:
+            notice = Notice.objects.all().filter(posted_by__user=self.user).filter(id=id_)
             if not notice.exists():
                 raise forms.ValidationError(_('Unauthorised access on notice'), code='InvalidAccess')
         designation = Designation.objects.all().filter(user=self.user).filter(pk=cleaned_data['designation'])
@@ -44,14 +45,14 @@ class NoticeForm(forms.Form):
         return cleaned_data
 
     def save(self):
-        id = self.cleaned_data.get('id')
+        id_ = self.cleaned_data.get('id')
         title = self.cleaned_data.get('title')
         description = self.cleaned_data.get('description')
         priority = self.cleaned_data.get('priority')
         expiration_date = self.cleaned_data.get('expiration_date')
         designation = self.cleaned_data.get('designation')
-        if id is not None and id != -1:
-            notice = Notice.objects.get(pk=id)
+        if id_ is not None and id_ != -1:
+            notice = Notice.objects.get(pk=id_)
             notice.title = title
             notice.description = description
             notice.priority = priority

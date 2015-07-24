@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from models import Designation
 from datetime import datetime
 
+
 class UserSerializer(serializers.ModelSerializer):
     employeeNumber = serializers.CharField(max_length=16, source='username')
 
@@ -30,11 +31,10 @@ class DesignationReadSerializer(serializers.ModelSerializer):
     def get_post(self, obj):
         post = obj.post
         curr_date = datetime.now().date()
-        if (curr_date > obj.end_date):
+        if curr_date > obj.end_date:
             post = "Ex. " + post
         return post
 
     class Meta:
         model = Designation
         fields = ['id', 'name', 'email', 'post']
-

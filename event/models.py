@@ -5,7 +5,6 @@ from authentication.models import Designation
 from django.contrib.auth.models import User
 from globals import categories
 
-# Create your models here.
 
 def event_images(instance, filename):
     filename = filename.split('.')
@@ -14,6 +13,7 @@ def event_images(instance, filename):
     else:
         ext = "jpg"
     return os.path.join("event_images", uuid4().hex + "." + ext)
+
 
 class Event(models.Model):
     title = models.CharField(max_length=256)
@@ -28,6 +28,7 @@ class Event(models.Model):
     def __unicode__(self):
         return self.title
 
+
 class EventImage(models.Model):
     event = models.ForeignKey(Event, related_name='images')
     image = models.ImageField(upload_to=event_images)
@@ -40,8 +41,7 @@ class EventLike(models.Model):
     event = models.ForeignKey(Event, related_name='likes')
     user = models.ForeignKey(User)
 
+
 class EventViews(models.Model):
     event = models.ForeignKey(Event, related_name='views')
     user = models.ForeignKey(User)
-
-

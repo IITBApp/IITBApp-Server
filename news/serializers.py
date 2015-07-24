@@ -2,7 +2,7 @@ __author__ = 'dheerendra'
 
 from rest_framework import serializers
 from models import News, NewsImage, NewsLike, NewsViews
-from authentication.serializers import UserSerializer, DesignationReadSerializer
+from authentication.serializers import DesignationReadSerializer
 
 
 class NewsImageSerializer(serializers.ModelSerializer):

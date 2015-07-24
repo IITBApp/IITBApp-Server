@@ -2,7 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from django.conf import settings
-import sys
+
 
 def send_mail(subject, text_msg, from_email, to_email_list):
 

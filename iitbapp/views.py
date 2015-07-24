@@ -7,6 +7,7 @@ from django.conf import settings
 import os
 from django.shortcuts import render
 
+
 class LoginRequiredMixin(object):
 
     @method_decorator(login_required)
@@ -25,9 +26,9 @@ def about(request):
 def logs(request):
     response = HttpResponse(content_type="text/plain")
 
-    file = os.path.join(settings.BASE_DIR, 'logs/application.log')
+    file_ = os.path.join(settings.BASE_DIR, 'logs/application.log')
 
-    with open(file) as f:
+    with open(file_) as f:
         content = f.read()
         response.write(content)
     return response

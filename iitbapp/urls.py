@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.conf import settings
-from django.conf.urls.static import static
 from authentication import urls as authentication_urls
 from news import urls as news_urls
 from event import urls as event_urls
@@ -40,10 +39,10 @@ urlpatterns = [
 ]
 
 urlpatterns += patterns('',
-        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.STATIC_ROOT,
-        }),
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        })
-    )
+                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+                            'document_root': settings.STATIC_ROOT,
+                        }),
+                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+                            'document_root': settings.MEDIA_ROOT,
+                        })
+                        )

@@ -1,16 +1,18 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from serializers import ContactSerializer, ClubSerializer, DepartmentSerializer, EmergencyContactSerializer
 from models import Contact, Club, Department, EmergencyContact
 from rest_framework.pagination import LimitOffsetPagination
 
+
 class InformationPaginationClass(LimitOffsetPagination):
     default_limit = 20
     max_limit = 50
 
+
 class AbstractInformationViewset(viewsets.ReadOnlyModelViewSet):
 
     pagination_class = InformationPaginationClass
+
 
 class ContactViewset(AbstractInformationViewset):
 

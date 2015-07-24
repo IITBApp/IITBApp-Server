@@ -1,8 +1,6 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from django.contrib.auth.models import User
 from serializers import UserSerializer
-from django.views.generic import View
 import ldap
 import json
 from django.http import HttpResponse
@@ -38,6 +36,7 @@ def authenticate_ldap(username, password):
         response_data['ldap'] = result_dict['uid'][0]
         response_data['employeeNumber'] = result_dict['employeeNumber'][0]
         bind_ds = search_result[0][0]
+
         try:
             connection.bind_s(bind_ds, password)
             response_data['error'] = False
@@ -61,4 +60,3 @@ class UserViewset(viewsets.ModelViewSet):
 
         json_data = json.dumps(response_data)
         return HttpResponse(json_data, content_type="application/json")
-

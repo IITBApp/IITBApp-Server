@@ -29,4 +29,3 @@ def send_event_push_notification(sender, instance, created, **kwargs):
 event_done = django.dispatch.Signal(providing_args=['created', 'instance'])
 
 event_done.connect(send_event_push_notification, Event)
-

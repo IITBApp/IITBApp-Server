@@ -1,5 +1,5 @@
 
-#Email server settings
+# Email server settings
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = "587"
 
@@ -16,10 +16,10 @@ ALLOWED_DOMAINS = [
 ]
 
 
-#DB Setting
+# DB Setting
 IS_TEST = True
 
-#database settings
+# database settings
 DB_ENGINE = 'django.db.backends.postgresql_psycopg2'
 DB_NAME = 'iitbapp'
 DB_USER = 'iitbapp'
@@ -27,5 +27,15 @@ DB_PASSWORD = 'iitbapp'
 DB_HOST = '127.0.0.1'
 DB_PORT = '5432'
 
-#SUPERUSER USERNAME
+# SUPERUSER USERNAME
 SUPERUSER = 'dheerendra'
+
+GCM_KEY = "<YOUR GCM API KEY>"
+
+MEDIA_URL = "/media/"
+
+STATIC_URL = "/static/"
+
+TOKEN_AUTH = "<TOKEN FOR COMMUNICATION>"
+
+SESSION_COOKIE_PATH = "/"

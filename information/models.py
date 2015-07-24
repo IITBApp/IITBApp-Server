@@ -14,16 +14,18 @@ class Information(models.Model):
     class Meta:
         abstract = True
 
+
 class Contact(Information):
     pass
+
 
 class Department(Information):
     pass
 
+
 class Club(Information):
     pass
 
+
 class EmergencyContact(Information):
     pass
-
-

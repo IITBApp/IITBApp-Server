@@ -5,7 +5,6 @@ from authentication.models import Designation
 from globals import categories
 import os
 
-# Create your models here.
 
 def news_images(instance, filename):
     filename = filename.split('.')
@@ -14,6 +13,7 @@ def news_images(instance, filename):
     else:
         ext = "jpg"
     return os.path.join("news_images", uuid4().hex + "." + ext)
+
 
 class News(models.Model):
     time = models.DateTimeField(auto_now_add=True)
@@ -29,6 +29,7 @@ class News(models.Model):
     class Meta:
         verbose_name_plural = "news"
 
+
 class NewsImage(models.Model):
     news = models.ForeignKey(News, related_name='images')
     image = models.ImageField(upload_to=news_images)
@@ -36,9 +37,11 @@ class NewsImage(models.Model):
     def __unicode__(self):
         return self.image.url
 
+
 class NewsLike(models.Model):
     news = models.ForeignKey(News, related_name='likes')
     user = models.ForeignKey(User)
+
 
 class NewsViews(models.Model):
     news = models.ForeignKey(News, related_name='views')

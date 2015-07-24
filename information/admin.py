@@ -1,6 +1,7 @@
 from django.contrib import admin
 from models import Contact, Club, Department, EmergencyContact
 
+
 class InformationAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'link', 'phone']
 
