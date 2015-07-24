@@ -25,7 +25,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             event_like, created = EventLike.objects.get_or_create(event__id=event, user__id=user,
                                                                   defaults={'event_id': event, 'user_id': user})
-            return Response(EventLikeSerializer(event_like, context={'liked': created}).data)
+            return Response(EventLikeSerializer(event_like).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -37,7 +37,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             EventLike.objects.all().filter(event=event).filter(user=user).delete()
             likes = EventLike.objects.all().filter(news=event).count()
-            return Response({'status': 'deleted', 'likes': likes})
+            return Response({'user': user, 'news': news, 'id': -1, 'likes': likes})
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -49,6 +49,6 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             event_view, created = EventViews.objects.get_or_create(event__id=event, user_id=user,
                                                                    defaults={'event_id': event, 'user_id': user})
-            return Response(EventViewSerializer(event_view, context={'viewed': created}).data)
+            return Response(EventViewSerializer(event_view).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

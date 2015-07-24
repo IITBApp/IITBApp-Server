@@ -25,7 +25,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             news_like, created = NewsLike.objects.get_or_create(news__id=news, user__id=user,
                                                                 defaults={'news_id': news, 'user_id': user})
-            return Response(NewsLikeSerializer(news_like, context={'liked': created}).data)
+            return Response(NewsLikeSerializer(news_like).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -37,7 +37,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             NewsLike.objects.all().filter(news=news).filter(user=user).delete()
             likes = NewsLike.objects.all().filter(news=news).count()
-            return Response({'status': 'deleted', 'likes': likes})
+            return Response({'user': user, 'news': news, 'id': -1, 'likes': likes})
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -49,6 +49,6 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             user = serializer.data['user']
             news_view, created = NewsViews.objects.get_or_create(news__id=news, user_id=user,
                                                                  defaults={'news_id': news, 'user_id': user})
-            return Response(NewsViewSerializer(news_view, context={'viewed': created}).data)
+            return Response(NewsViewSerializer(news_view).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
