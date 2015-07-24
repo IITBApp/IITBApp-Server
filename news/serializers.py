@@ -21,6 +21,26 @@ class NewsWriteSerializer(serializers.ModelSerializer):
 
 class NewsReadSerializer(NewsWriteSerializer):
     posted_by = DesignationReadSerializer(read_only=True)
+    liked = serializers.SerializerMethodField()
+    viewed = serializers.SerializerMethodField()
+
+    def get_viewed(self, obj):
+        if not isinstance(obj, News):
+            return False
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            return NewsViews.objects.all().filter(news=obj).filter(user=user).exists()
+        return False
+
+    def get_liked(self, obj):
+        if not isinstance(obj, News):
+            return False
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            return NewsLike.objects.all().filter(news=obj).filter(user=user).exists()
+        return False
 
 
 class NewsLikeSerializer(serializers.ModelSerializer):
@@ -32,14 +52,6 @@ class NewsLikeSerializer(serializers.ModelSerializer):
 
 class NewsViewSerializer(serializers.ModelSerializer):
     views = serializers.IntegerField(source='news.views.count', read_only=True)
-    liked = serializers.SerializerMethodField()
-
-    def get_liked(self, obj):
-        if isinstance(obj, NewsViews):
-            news = obj.news
-            user = obj.user
-            return NewsLike.objects.all().filter(news=news).filter(user=user).exists()
-        return False
 
     class Meta:
         model = NewsViews

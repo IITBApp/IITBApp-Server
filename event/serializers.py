@@ -21,6 +21,26 @@ class EventWriteSerializer(serializers.ModelSerializer):
 
 class EventReadSerializer(EventWriteSerializer):
     posted_by = DesignationReadSerializer(read_only=True)
+    liked = serializers.SerializerMethodField()
+    viewed = serializers.SerializerMethodField()
+
+    def get_viewed(self, obj):
+        if not isinstance(obj, Event):
+            return False
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            return EventViews.objects.all().filter(event=obj).filter(user=user).exists()
+        return False
+
+    def get_liked(self, obj):
+        if not isinstance(obj, Event):
+            return False
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            return EventLike.objects.all().filter(event=obj).filter(user=user).exists()
+        return False
 
 
 class EventLikeSerializer(serializers.ModelSerializer):
@@ -32,14 +52,6 @@ class EventLikeSerializer(serializers.ModelSerializer):
 
 class EventViewSerializer(serializers.ModelSerializer):
     views = serializers.IntegerField(source='event.views.count', read_only=True)
-    liked = serializers.SerializerMethodField()
-
-    def get_liked(self, obj):
-        if isinstance(obj, EventViews):
-            event = obj.event
-            user = obj.user
-            return EventLike.objects.all().filter(event=event).filter(user=user).exists()
-        return False
 
     class Meta:
         model = EventViews

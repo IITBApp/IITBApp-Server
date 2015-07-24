@@ -5,6 +5,9 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.pagination import LimitOffsetPagination
+from authentication.tokenauth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from iitbapp.permissions import IsCorrectUserId
 
 
 class NewsPagination(LimitOffsetPagination):
@@ -16,6 +19,8 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = News.objects.all().order_by('-id')
     pagination_class = NewsPagination
     serializer_class = NewsReadSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, IsCorrectUserId]
 
     @list_route(methods=['POST'])
     def like(self, request):
@@ -23,6 +28,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         if serializer.is_valid():
             news = serializer.data['news']
             user = serializer.data['user']
+            self.check_object_permissions(request, user)
             news_like, created = NewsLike.objects.get_or_create(news__id=news, user__id=user,
                                                                 defaults={'news_id': news, 'user_id': user})
             return Response(NewsLikeSerializer(news_like).data)
@@ -35,6 +41,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         if serializer.is_valid():
             news = serializer.data['news']
             user = serializer.data['user']
+            self.check_object_permissions(request, user)
             NewsLike.objects.all().filter(news=news).filter(user=user).delete()
             likes = NewsLike.objects.all().filter(news=news).count()
             return Response({'user': user, 'news': news, 'id': -1, 'likes': likes})
@@ -47,6 +54,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         if serializer.is_valid():
             news = serializer.data['news']
             user = serializer.data['user']
+            self.check_object_permissions(request, user)
             news_view, created = NewsViews.objects.get_or_create(news__id=news, user_id=user,
                                                                  defaults={'news_id': news, 'user_id': user})
             return Response(NewsViewSerializer(news_view).data)
