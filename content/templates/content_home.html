@@ -23,8 +23,31 @@
 
 {% block body %}
     <div id="tab-content" class="tab-content">
-        <div role="tabpanel" class="tab-pane fade active in" id="content-home-tab" aria-labelledby="content-home-tab">
-            <h1>To Add or Update News/Events/Notices, click on Create/Update button on upper right corner</h1>
+        <div role="tabpanel" style="text-align: center;" class="tab-pane fade active in" id="content-home-tab"
+             aria-labelledby="content-home-tab">
+            <img src="{% static 'img/brand_iitbapp.png' %}" alt="logo">
+            <h1 style="font-size: 50px;">Welcome to IITB app content creation page</h1>
+
+            <p style="font-size: 30px;">Here you can add or update news, events and notices. Click on following buttons
+                to visit respective pages</p>
+
+            <div class="well center-block" style="max-width: 200px;">
+                <a href="#news-tab" role="tab" id="news-tab-control" data-toggle="tab"
+                   class="btn btn-primary btn-lg btn-block"
+                   aria-controls="news-tab">News</a>
+                <a href="#event-tab" role="tab" id="event-tab-control" data-toggle="tab"
+                   class="btn btn-primary btn-lg btn-block"
+                   aria-controls="event-tab">Event</a>
+                <a href="#notice-tab" role="tab" id="notice-tab-control" data-toggle="tab"
+                   class="btn btn-primary btn-lg btn-block"
+                   aria-controls="notice-tab">Notice</a>
+            </div>
+
+            <div>
+                <p style="color: firebrick; font-size: 20px;">You can also find these links under <b>Create/Update</b>
+                    menu in upper right corner</p>
+            </div>
+
         </div>
         {% include 'news/news.html' %}
         {% include 'event/event.html' %}
