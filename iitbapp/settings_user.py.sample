@@ -6,8 +6,6 @@ EMAIL_PORT = "587"
 EMAIL_USERNAME = ""
 EMAIL_PASSWORD = ""
 
-SERVER = "http://localhost:8000"
-
 EMAIL_FROM = ""
 
 # Registration
