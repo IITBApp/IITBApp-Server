@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+import uuid
 
 
 class Designation(models.Model):
@@ -17,3 +18,8 @@ class Designation(models.Model):
 
     def __unicode__(self):
         return self.user.username + "-" + self.post
+
+
+class UserToken(models.Model):
+    user = models.ForeignKey(User)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)

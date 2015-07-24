@@ -204,7 +204,6 @@ TEMPLATE_LOADERS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'iitbapp.tokenauth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     )
 }

@@ -83,17 +83,8 @@ class LoginView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
-            response_data = authenticate_ldap(username, password)
+            response_data, user = authenticate_ldap(username, password, False)
 
-            user = None
-
-            if not response_data['error']:
-                user_serialized = UserSerializer(data=response_data)
-                if user_serialized.is_valid():
-                    user = user_serialized.save()
-                    user.backend = "django.contrib.auth.backends.ModelBackend"
-
-                    #            user = authenticate(username=username, password=password)
             if user is not None and user.is_authenticated():
                 designations = user.designations.all()
                 have_active_designation = any([designation.is_active() for designation in designations])

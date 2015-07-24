@@ -5,9 +5,10 @@ import ldap
 import json
 from django.http import HttpResponse
 from rest_framework.decorators import list_route
+from models import UserToken
 
 
-def authenticate_ldap(username, password):
+def authenticate_ldap(username, password, token):
     connection = ldap.initialize("ldap://ldap.iitb.ac.in")
 
     search_result = connection.search_s('dc=iitb,dc=ac,dc=in', ldap.SCOPE_SUBTREE, 'uid=%s' % username,
@@ -22,6 +23,7 @@ def authenticate_ldap(username, password):
         'employeeNumber': "",
         'ldap': "",
         'name': "",
+        'token': "",
     }
 
     if len(search_result) < 1 or search_result[0][1]['uid'][0] != username:
@@ -40,14 +42,29 @@ def authenticate_ldap(username, password):
         try:
             connection.bind_s(bind_ds, password)
             response_data['error'] = False
+            user_serialized = UserSerializer(data=response_data)
+            if user_serialized.is_valid():
+                user = user_serialized.save()
+                user.backend = "django.contrib.auth.backends.ModelBackend"
+                response_data['id'] = user.id
+
+                if token:
+                    user_token = UserToken(user=user)
+                    user_token.save()
+                    response_data['token'] = user_token.token.hex
+
+                return response_data, user
+            else:
+                response_data['error'] = True
+                response_data['error_message'] = 'Unable to login. Please contact admin'
         except ldap.INVALID_CREDENTIALS:
             response_data['error'] = True
             response_data['error_message'] = "Invalid Credentials"
 
-    return response_data
+    return response_data, None
 
 
-class UserViewset(viewsets.ModelViewSet):
+class UserViewset(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -56,7 +73,7 @@ class UserViewset(viewsets.ModelViewSet):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        response_data = authenticate_ldap(username, password)
+        response_data, user = authenticate_ldap(username, password, True)
 
         json_data = json.dumps(response_data)
         return HttpResponse(json_data, content_type="application/json")

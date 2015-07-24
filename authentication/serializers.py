@@ -20,10 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class DesignationReadSerializer(serializers.ModelSerializer):
     post = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
-    email = serializers.SerializerMethodField()
-
-    def get_email(self, obj):
-        return obj.user.email
+    email = serializers.EmailField(source='user.email', read_only=True)
 
     def get_name(self, obj):
         return obj.user.first_name + " " + obj.user.last_name
