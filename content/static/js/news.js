@@ -31,7 +31,7 @@ $news_form.submit(function (e) {
         error: function (jqXHR, textStatus, errorThrown) {
             var status = jqXHR.status;
             if (status == 413){
-                display_notification('danger', 'Request size two large. Please resize your image to 4 MB');
+                display_notification('danger', 'Request size too large. Please resize your image to 4 MB');
                 return;
             }
             if (status.toString().charAt(0) == "5"){
