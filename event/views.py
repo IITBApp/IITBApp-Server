@@ -20,9 +20,9 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = EventPagination
     serializer_class = EventReadSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsCorrectUserId]
+    permission_classes = [IsAuthenticated]
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def like(self, request):
         serializer = EventLikeSerializer(data=request.data)
         if serializer.is_valid():
@@ -35,7 +35,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def unlike(self, request):
         serializer = EventLikeSerializer(data=request.data)
         if serializer.is_valid():
@@ -48,7 +48,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def view(self, request):
         serializer = EventViewSerializer(data=request.data)
         if serializer.is_valid():

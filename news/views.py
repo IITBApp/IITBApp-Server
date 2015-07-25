@@ -20,9 +20,9 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = NewsPagination
     serializer_class = NewsReadSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsCorrectUserId]
+    permission_classes = [IsAuthenticated]
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def like(self, request):
         serializer = NewsLikeSerializer(data=request.data)
         if serializer.is_valid():
@@ -35,7 +35,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def unlike(self, request):
         serializer = NewsLikeSerializer(data=request.data)
         if serializer.is_valid():
@@ -48,7 +48,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'])
+    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
     def view(self, request):
         serializer = NewsViewSerializer(data=request.data)
         if serializer.is_valid():
