@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import News, NewsImage
+from models import News, NewsImage, NewsLike, NewsViews
 
 
 class NewsAdmin(admin.ModelAdmin):
@@ -10,5 +10,14 @@ class NewsImageAdmin(admin.ModelAdmin):
     list_display = ['id', 'news', 'image']
 
 
+class NewsLikeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'news', 'user']
+
+
+class NewsViewAdmin(admin.ModelAdmin):
+    list_display = ['id', 'news', 'user']
+
 admin.site.register(News, NewsAdmin)
 admin.site.register(NewsImage, NewsImageAdmin)
+admin.site.register(NewsLike, NewsLikeAdmin)
+admin.site.register(NewsViews, NewsViewAdmin)
