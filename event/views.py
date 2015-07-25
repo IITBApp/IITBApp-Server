@@ -8,6 +8,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated
 from iitbapp.permissions import IsCorrectUserId
 from authentication.tokenauth import TokenAuthentication
+from django.shortcuts import get_object_or_404
 
 
 class EventPagination(LimitOffsetPagination):
@@ -26,12 +27,12 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def like(self, request):
         serializer = EventLikeSerializer(data=request.data)
         if serializer.is_valid():
-            event = serializer.data['event']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            event_like, created = EventLike.objects.get_or_create(event__id=event, user__id=user,
-                                                                  defaults={'event_id': event, 'user_id': user})
-            return Response(EventLikeSerializer(event_like).data)
+            event_id = serializer.data['event']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            event_like, created = EventLike.objects.get_or_create(event__id=event_id, user__id=user_id,
+                                                                  defaults={'event_id': event_id, 'user_id': user_id})
+            return Response(EventReadSerializer(event_like.event, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -39,12 +40,12 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def unlike(self, request):
         serializer = EventLikeSerializer(data=request.data)
         if serializer.is_valid():
-            event = serializer.data['event']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            EventLike.objects.all().filter(event=event).filter(user=user).delete()
-            likes = EventLike.objects.all().filter(news=event).count()
-            return Response({'user': user, 'event': event, 'id': -1, 'likes': likes})
+            event_id = serializer.data['event']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            EventLike.objects.all().filter(event=event_id).filter(user=user_id).delete()
+            event = get_object_or_404(Event, pk=event_id)
+            return Response(EventReadSerializer(event, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -52,11 +53,11 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def view(self, request):
         serializer = EventViewSerializer(data=request.data)
         if serializer.is_valid():
-            event = serializer.data['event']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            event_view, created = EventViews.objects.get_or_create(event__id=event, user_id=user,
-                                                                   defaults={'event_id': event, 'user_id': user})
-            return Response(EventViewSerializer(event_view).data)
+            event_id = serializer.data['event']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            event_view, created = EventViews.objects.get_or_create(event__id=event_id, user_id=user_id,
+                                                                   defaults={'event_id': event_id, 'user_id': user_id})
+            return Response(EventReadSerializer(event_view.event, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

@@ -8,6 +8,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from authentication.tokenauth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from iitbapp.permissions import IsCorrectUserId
+from django.shortcuts import get_object_or_404
 
 
 class NewsPagination(LimitOffsetPagination):
@@ -26,12 +27,12 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def like(self, request):
         serializer = NewsLikeSerializer(data=request.data)
         if serializer.is_valid():
-            news = serializer.data['news']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            news_like, created = NewsLike.objects.get_or_create(news__id=news, user__id=user,
-                                                                defaults={'news_id': news, 'user_id': user})
-            return Response(NewsLikeSerializer(news_like).data)
+            news_id = serializer.data['news']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            news_like, created = NewsLike.objects.get_or_create(news__id=news_id, user__id=user_id,
+                                                                defaults={'news_id': news_id, 'user_id': user_id})
+            return Response(NewsReadSerializer(news_like.news, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -39,12 +40,12 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def unlike(self, request):
         serializer = NewsLikeSerializer(data=request.data)
         if serializer.is_valid():
-            news = serializer.data['news']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            NewsLike.objects.all().filter(news=news).filter(user=user).delete()
-            likes = NewsLike.objects.all().filter(news=news).count()
-            return Response({'user': user, 'news': news, 'id': -1, 'likes': likes})
+            news_id = serializer.data['news']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            NewsLike.objects.all().filter(news=news_id).filter(user=user_id).delete()
+            news = get_object_or_404(News, pk=news_id)
+            return Response(NewsReadSerializer(news, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -52,11 +53,11 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def view(self, request):
         serializer = NewsViewSerializer(data=request.data)
         if serializer.is_valid():
-            news = serializer.data['news']
-            user = serializer.data['user']
-            self.check_object_permissions(request, user)
-            news_view, created = NewsViews.objects.get_or_create(news__id=news, user_id=user,
-                                                                 defaults={'news_id': news, 'user_id': user})
-            return Response(NewsViewSerializer(news_view).data)
+            news_id = serializer.data['news']
+            user_id = serializer.data['user']
+            self.check_object_permissions(request, user_id)
+            news_view, created = NewsViews.objects.get_or_create(news__id=news_id, user_id=user_id,
+                                                                 defaults={'news_id': news_id, 'user_id': user_id})
+            return Response(NewsReadSerializer(news_view.news, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
