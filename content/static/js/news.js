@@ -7,7 +7,9 @@ var add_news_url;
 var $news_form = $("#news-form");
 
 $news_form.bind('reset', function (e) {
-   $("#news-image-list").html("");
+    $("#news-image-list").html("");
+    $("#news-id").val("-1");
+    $(".element-error").remove();
 });
 
 $news_form.submit(function (e) {
@@ -30,11 +32,11 @@ $news_form.submit(function (e) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             var status = jqXHR.status;
-            if (status == 413){
+            if (status == 413) {
                 display_notification('danger', 'Request size too large. Please resize your image to 4 MB');
                 return;
             }
-            if (status.toString().charAt(0) == "5"){
+            if (status.toString().charAt(0) == "5") {
                 display_notification('danger', 'Internal server error. Please try again later');
                 return;
             }
@@ -53,10 +55,10 @@ $news_form.submit(function (e) {
                         error_list_selector.append("<li><b style=\"color:red;\">{0}:</b> {1}</li>".format(error.code, error.message));
                     }
                 }
-                else{
+                else {
                     var element_form_group = $("#news-form input[name={0}]".format(key)).closest('.form-group');
                     var element_error_html = "<ul class=\"element-error\">";
-                    for (var index in error_list){
+                    for (var index in error_list) {
                         var error = error_list[index];
                         element_error_html += "<li><b style=\"color:red;\">{0}:</b> {1}</li>".format(error.code, error.message);
                     }
@@ -121,7 +123,7 @@ body.on('click', '.news-list-btn', function (e) {
 
     news_image_list.html("");
     var image_array = image.split(",");
-    for (var index in image_array){
+    for (var index in image_array) {
         news_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
     }
 

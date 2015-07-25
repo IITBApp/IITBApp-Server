@@ -5,6 +5,7 @@
 var body = $('body');
 var fetch_notice_url;
 var add_notice_url;
+var $notice_form = $("#notice-form");
 
 $("#notice-expiration-date").datetimepicker({
     locale: 'en',
@@ -15,7 +16,11 @@ $("#notice-expiration-date").datetimepicker({
     useCurrent: false
 });
 
-$("#notice-form").submit(function(e){
+$notice_form.bind('reset', function(e){
+    $("#notice-id").val("-1");
+});
+
+$notice_form.submit(function(e){
     e.preventDefault();
     var submit_url = add_notice_url;
     var data = $(this).serialize();

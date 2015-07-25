@@ -16,7 +16,9 @@ $("#event-time-date").datetimepicker({
 });
 
 $event_form.bind('reset', function (e) {
-   $("#event-image-list").html("");
+    $("#event-image-list").html("");
+    $("#event-id").val("-1");
+    $(".element-error").remove();
 });
 
 $event_form.submit(function (e) {
@@ -39,11 +41,11 @@ $event_form.submit(function (e) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             var status = jqXHR.status;
-            if (status == 413){
+            if (status == 413) {
                 display_notification('danger', 'Request size too large. Please resize your image to 4 MB');
                 return;
             }
-            if (status.toString().charAt(0) == "5"){
+            if (status.toString().charAt(0) == "5") {
                 display_notification('danger', 'Internal server error. Please try again later');
                 return;
             }
@@ -62,10 +64,10 @@ $event_form.submit(function (e) {
                         error_list_selector.append("<li><b style=\"color:red;\">{0}:</b> {1}</li>".format(error.code, error.message));
                     }
                 }
-                else{
+                else {
                     var element_form_group = $("#event-form input[name={0}]".format(key)).closest('.form-group');
                     var element_error_html = "<ul class=\"element-error\">";
-                    for (var index in error_list){
+                    for (var index in error_list) {
                         var error = error_list[index];
                         element_error_html += "<li><b style=\"color:red;\">{0}:</b> {1}</li>".format(error.code, error.message);
                     }
@@ -137,7 +139,7 @@ body.on('click', '.event-list-btn', function (e) {
 
     event_image_list.html("");
     var image_array = image.split(",");
-    for (var index in image_array){
+    for (var index in image_array) {
         event_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
     }
 
