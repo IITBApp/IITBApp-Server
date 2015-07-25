@@ -28,17 +28,14 @@ $("#notice-form").submit(function(e){
             $("#notice-form")[0].reset();
             $("#notice-error-list").empty();
             fetch_notices();
-            $.notify({
-                message: 'Notice updated successfully'
-            },{
-                type: 'success',
-                placement: {
-                    from: 'top',
-                    align: 'center'
-                }
-            })
+            display_notification('success', 'Notice updated successfully');
         },
         error: function(jqXHR, textStatus, errorThrown){
+            var status = jqXHR.status;
+            if (status.toString().charAt(0) == "5"){
+                display_notification('error', 'Internal server error. Please try again later');
+                return;
+            }
             var error_data = JSON.parse(jqXHR.responseText);
             var error_list_selector = $("#notice-error-list");
             error_list_selector.empty();

@@ -35,17 +35,18 @@ $event_form.submit(function (e) {
             $("#event-form")[0].reset();
             $("#event-error-list").empty();
             fetch_events();
-            $.notify({
-                message: 'Event updated successfully'
-            }, {
-                type: 'success',
-                placement: {
-                    from: 'top',
-                    align: 'center'
-                }
-            })
+            display_notification('success', 'Event updated successfully');
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            var status = jqXHR.status;
+            if (status == 413){
+                display_notification('error', 'Request size two large. Please resize your image to 4 MB');
+                return;
+            }
+            if (status.toString().charAt(0) == "5"){
+                display_notification('error', 'Internal server error. Please try again later');
+                return;
+            }
             var error_data = JSON.parse(jqXHR.responseText);
             var error_list_selector = $("#event-error-list");
             error_list_selector.empty();
