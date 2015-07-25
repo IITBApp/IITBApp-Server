@@ -33,7 +33,7 @@ $("#notice-form").submit(function(e){
         error: function(jqXHR, textStatus, errorThrown){
             var status = jqXHR.status;
             if (status.toString().charAt(0) == "5"){
-                display_notification('error', 'Internal server error. Please try again later');
+                display_notification('danger', 'Internal server error. Please try again later');
                 return;
             }
             var error_data = JSON.parse(jqXHR.responseText);
