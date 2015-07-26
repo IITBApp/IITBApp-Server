@@ -6,6 +6,11 @@ import json
 from django.http import HttpResponse
 from rest_framework.decorators import list_route
 from models import UserToken
+from forms import LogoutForm
+import uuid
+from tokenauth import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from iitbapp.permissions import IsCorrectUserId
 
 
 def authenticate_ldap(username, password, token):
@@ -77,3 +82,19 @@ class UserViewset(viewsets.ReadOnlyModelViewSet):
 
         json_data = json.dumps(response_data)
         return HttpResponse(json_data, content_type="application/json")
+
+    @list_route(methods=['POST'], authentication_classes=[TokenAuthentication],
+                permission_classes=[IsAuthenticated, IsCorrectUserId])
+    def logout(self, request):
+        logout_form = LogoutForm(data=request.DATA)
+        if logout_form.is_valid():
+            user = logout_form.cleaned_data['user']
+            self.check_object_permissions(request, user)
+            logout_all = logout_form.cleaned_data['logout_all']
+            token = request.META.get('HTTP_TOKEN_AUTH')
+            if logout_all:
+                UserToken.objects.all().filter(user=user).delete()
+            else:
+                UserToken.objects.all().filter(user=user).filter(token=uuid.UUID(token)).delete()
+            return HttpResponse("{}", content_type="application/json")
+        return HttpResponse(logout_form.errors.as_json(), content_type="application/json")
