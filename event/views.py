@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 
 
 class EventPagination(LimitOffsetPagination):
-    default_limit = 10
+    default_limit = 20
     max_limit = 50
 
 

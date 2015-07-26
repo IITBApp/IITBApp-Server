@@ -7,7 +7,7 @@ from authentication.tokenauth import TokenAuthentication
 
 
 class NoticePagination(LimitOffsetPagination):
-    default_limit = 10
+    default_limit = 20
     max_limit = 50
 
 
