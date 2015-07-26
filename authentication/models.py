@@ -22,4 +22,4 @@ class Designation(models.Model):
 
 class UserToken(models.Model):
     user = models.ForeignKey(User)
-    token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True, unique=True)
