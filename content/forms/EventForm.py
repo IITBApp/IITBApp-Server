@@ -93,5 +93,6 @@ class EventForm(forms.Form):
                     image=event_image
                 )
             eventImage.save()
+        event.refresh_from_db()
         event_signals.event_done.send(Event, instance=event, created=created)
         return event

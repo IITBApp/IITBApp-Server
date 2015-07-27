@@ -77,5 +77,6 @@ class NewsForm(forms.Form):
                     image=news_image
                 )
             newsImage.save()
+        news.refresh_from_db()
         news_signals.news_done.send(News, instance=news, created=created)
         return news
