@@ -71,6 +71,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="form-group hide" id="event-notify-users-group">
+                            <label for="event-notify-users">Notify Users</label>
+                            <input name="notify-users" id="event-notify-users" type="checkbox">
+                            <p style="color: #e26767;;">
+                                Check this button only if you think that this is an important and urgent update and users
+                                need to notified about update. If this is just a simple correction like typo then don't check
+                                it. <br>
+                                You hereby accept that by checking this checkbox users will be notified. You also accept
+                                that you will not misuse this feature to notify users back-to-back. Any complain from users
+                                in such cases may lead to your disqualification from content creator access.
+                            </p>
+                        </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary" id="event-add-btn">Submit</button>
                             <button type="reset" class="btn btn-default" id="event-reset-btn">Reset</button>
