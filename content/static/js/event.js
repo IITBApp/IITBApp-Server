@@ -145,7 +145,6 @@ body.on('click', '.event-list-btn', function (e) {
     }
 
     $("#event-notify-users-group").removeClass("hide");
-    console.log("#event-notify-users-group");
     $("#event-notify-users").prop("checked", false);
 
 });

@@ -18,6 +18,8 @@ $("#notice-expiration-date").datetimepicker({
 
 $notice_form.bind('reset', function(e){
     $("#notice-id").val("-1");
+    $(".element-error").remove();
+    $("#notice-notify-users-group").addClass("hide");
 });
 
 $notice_form.submit(function(e){
@@ -112,6 +114,9 @@ body.on('click', '.notice-list-btn', function(e){
     $("#notice-priority").val(priority);
     $("#notice-expiry").val(formatted_date);
     $("#notice-designation").val(designation);
+
+    $("#notice-notify-users-group").removeClass("hide");
+    $("#notice-notify-users").prop("checked", false);
 
 });
 

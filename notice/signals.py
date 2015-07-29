@@ -1,11 +1,11 @@
 __author__ = 'dheerendra'
 
 from serializers import NoticeReadSerializer
-from models import Notice
-from django.db.models import signals
+import django.dispatch
 import logging
 import json
 from globals import send_android_push_notification
+from models import Notice
 
 logger = logging.getLogger(__name__)
 
@@ -26,4 +26,5 @@ def send_notice_push_notification(sender, instance, created, **kwargs):
     logger.info("Android push sent for notice with id %d with message %s", instance.id, message)
 
 
-signals.post_save.connect(send_notice_push_notification, Notice)
+notice_done = django.dispatch.Signal(providing_args=['instance', 'created'])
+notice_done.connect(send_notice_push_notification, Notice)
