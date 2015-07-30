@@ -35,18 +35,17 @@ def authenticate_ldap(username, password, token):
         response_data['error'] = True
         response_data['error_message'] = "Invalid Username/Password"
     else:
-        result_dict = search_result[0][1]
-        response_data['first_name'] = result_dict['givenName'][0]
-        response_data['last_name'] = result_dict['sn'][0]
-        response_data['name'] = result_dict['cn'][0]
-        response_data['email'] = result_dict['mail'][0]
-        response_data['ldap'] = result_dict['uid'][0]
-        response_data['employeeNumber'] = result_dict['employeeNumber'][0]
-        bind_ds = search_result[0][0]
-
         try:
+            bind_ds = search_result[0][0]
             connection.bind_s(bind_ds, password)
             response_data['error'] = False
+            result_dict = search_result[0][1]
+            response_data['first_name'] = result_dict['givenName'][0]
+            response_data['last_name'] = result_dict['sn'][0]
+            response_data['name'] = result_dict['cn'][0]
+            response_data['email'] = result_dict['mail'][0]
+            response_data['ldap'] = result_dict['uid'][0]
+            response_data['employeeNumber'] = result_dict['employeeNumber'][0]
             user_serialized = UserSerializer(data=response_data)
             if user_serialized.is_valid():
                 user = user_serialized.save()
@@ -65,6 +64,9 @@ def authenticate_ldap(username, password, token):
         except ldap.INVALID_CREDENTIALS:
             response_data['error'] = True
             response_data['error_message'] = "Invalid Credentials"
+        except:
+            response_data['error'] = True
+            response_data['error_message'] = 'Unable to authenticate'
 
     return response_data, None
 
