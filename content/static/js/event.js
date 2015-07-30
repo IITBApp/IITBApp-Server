@@ -19,6 +19,7 @@ $event_form.bind('reset', function (e) {
     $("#event-image-list").html("");
     $("#event-id").val("-1");
     $(".element-error").remove();
+    $("#event-notify-users-group").addClass("hide");
 });
 
 $event_form.submit(function (e) {
@@ -142,6 +143,9 @@ body.on('click', '.event-list-btn', function (e) {
     for (var index in image_array) {
         event_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
     }
+
+    $("#event-notify-users-group").removeClass("hide");
+    $("#event-notify-users").prop("checked", false);
 
 });
 

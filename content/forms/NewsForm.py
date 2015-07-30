@@ -15,6 +15,7 @@ class NewsForm(forms.Form):
     category = forms.ChoiceField(choices=categories)
     news_image = forms.ImageField(required=False)
     designation = forms.IntegerField()
+    notify_users = forms.BooleanField(required=False)
 
     def __init__(self, user, *args, **kwargs):
         super(NewsForm, self).__init__(*args, **kwargs)
@@ -48,6 +49,7 @@ class NewsForm(forms.Form):
         category = self.cleaned_data.get('category')
         news_image = self.cleaned_data.get('news_image')
         designation = self.cleaned_data.get('designation')
+        notify_users = self.cleaned_data.get('notify_users')
         if id_ is not None and id_ != -1:
             created = False
             news = News.objects.get(pk=id_)
@@ -62,6 +64,7 @@ class NewsForm(forms.Form):
                         category=category,
                         posted_by_id=designation,
                         published=True)
+            notify_users = True
         news.save()
         if news_image is not None and news_image.image is not None:
             '''
@@ -77,6 +80,7 @@ class NewsForm(forms.Form):
                     image=news_image
                 )
             newsImage.save()
-        news.refresh_from_db()
-        news_signals.news_done.send(News, instance=news, created=created)
+        if notify_users:
+            news.refresh_from_db()
+            news_signals.news_done.send(News, instance=news, created=created)
         return news

@@ -6,6 +6,7 @@ from notice.models import Notice
 from authentication.models import Designation
 from django.utils.translation import gettext as _
 from django.utils import timezone
+import notice.signals as notice_signals
 
 
 class NoticeForm(forms.Form):
@@ -15,6 +16,7 @@ class NoticeForm(forms.Form):
     priority = forms.ChoiceField(choices=notice_priority)
     expiration_date = forms.DateTimeField(required=False, input_formats=datetime_input_formats)
     designation = forms.IntegerField()
+    notify_users = forms.BooleanField(required=False)
 
     def __init__(self, user, *args, **kwargs):
         super(NoticeForm, self).__init__(*args, **kwargs)
@@ -51,6 +53,7 @@ class NoticeForm(forms.Form):
         priority = self.cleaned_data.get('priority')
         expiration_date = self.cleaned_data.get('expiration_date')
         designation = self.cleaned_data.get('designation')
+        notify_users = self.cleaned_data.get('notify_users')
         if id_ is not None and id_ != -1:
             notice = Notice.objects.get(pk=id_)
             notice.title = title
@@ -58,11 +61,17 @@ class NoticeForm(forms.Form):
             notice.priority = priority
             notice.expiration_date = expiration_date
             notice.posted_by_id = designation
+            created = False
         else:
             notice = Notice(title=title,
                             description=description,
                             priority=priority,
                             expiration_date=expiration_date,
                             posted_by_id=designation)
+            notify_users = True
+            created = True
         notice.save()
+        if notify_users:
+            notice.refresh_from_db()
+            notice_signals.notice_done.send(Notice, instance=notice, created=created)
         return notice

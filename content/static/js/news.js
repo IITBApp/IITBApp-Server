@@ -10,6 +10,7 @@ $news_form.bind('reset', function (e) {
     $("#news-image-list").html("");
     $("#news-id").val("-1");
     $(".element-error").remove();
+    $("#news-notify-users-group").addClass("hide");
 });
 
 $news_form.submit(function (e) {
@@ -58,8 +59,8 @@ $news_form.submit(function (e) {
                 else {
                     var element_form_group = $("#news-form input[name={0}]".format(key)).closest('.form-group');
                     var element_error_html = "<ul class=\"element-error\">";
-                    for (var index in error_list) {
-                        var error = error_list[index];
+                    for (index in error_list) {
+                        error = error_list[index];
                         element_error_html += "<li><b style=\"color:red;\">{0}:</b> {1}</li>".format(error.code, error.message);
                     }
                     element_error_html += "</ul>";
@@ -126,6 +127,9 @@ body.on('click', '.news-list-btn', function (e) {
     for (var index in image_array) {
         news_image_list.append("<a href=\"{0}\" target=_blank>{0}</a>".format(image_array[index]));
     }
+
+    $("#news-notify-users-group").removeClass("hide");
+    $("#news-notify-users").prop("checked", false);
 
 });
 

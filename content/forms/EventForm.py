@@ -16,9 +16,10 @@ class EventForm(forms.Form):
     category = forms.ChoiceField(choices=categories)
     event_time = forms.DateTimeField(input_formats=datetime_input_formats)
     event_place = forms.CharField(max_length=256)
-    cancelled = forms.BooleanField(required=False)
+    cancelled = forms.BooleanField(required=False, initial=False)
     event_image = forms.ImageField(required=False)
     designation = forms.IntegerField()
+    notify_users = forms.BooleanField(required=False)
 
     def __init__(self, user, *args, **kwargs):
         super(EventForm, self).__init__(*args, **kwargs)
@@ -59,6 +60,7 @@ class EventForm(forms.Form):
         cancelled = self.cleaned_data.get('cancelled')
         event_image = self.cleaned_data.get('event_image')
         designation = self.cleaned_data.get('designation')
+        notify_users = self.cleaned_data.get('notify_users')
         if id_ is not None and id_ != -1:
             created = False
             event = Event.objects.get(pk=id_)
@@ -78,6 +80,7 @@ class EventForm(forms.Form):
                           event_place=event_place,
                           cancelled=cancelled,
                           posted_by_id=designation)
+            notify_users = True
         event.save()
         if event_image is not None and event_image.image is not None:
             '''
@@ -93,6 +96,7 @@ class EventForm(forms.Form):
                     image=event_image
                 )
             eventImage.save()
-        event.refresh_from_db()
-        event_signals.event_done.send(Event, instance=event, created=created)
+        if notify_users:
+            event.refresh_from_db()
+            event_signals.event_done.send(Event, instance=event, created=created)
         return event
