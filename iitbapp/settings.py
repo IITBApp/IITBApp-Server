@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'notice',
     'information',
     'content',
+    'core',
 )
 
 MIDDLEWARE_CLASSES = (

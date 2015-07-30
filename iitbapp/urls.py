@@ -13,7 +13,7 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url, patterns
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from authentication import urls as authentication_urls
@@ -22,6 +22,8 @@ from event import urls as event_urls
 from notice import urls as notice_urls
 from information import urls as information_urls
 from content import urls as content_urls
+from gcm import urls as gcm_urls
+import core.urls as core_urls
 import views
 
 urlpatterns = [
@@ -35,14 +37,15 @@ urlpatterns = [
     url(r'', include(news_urls)),
     url(r'', include(event_urls)),
     url(r'', include(notice_urls)),
-    url(r'', include('gcm.urls')),
+    url(r'', include(gcm_urls)),
+    url(r'', include(core_urls)),
 ]
 
-urlpatterns += patterns('',
-                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-                            'document_root': settings.STATIC_ROOT,
-                        }),
-                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-                            'document_root': settings.MEDIA_ROOT,
-                        })
-                        )
+urlpatterns += [
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.STATIC_ROOT,
+    }),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT,
+    }),
+]
