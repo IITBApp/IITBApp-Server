@@ -1,3 +1,9 @@
 from django.contrib import admin
+from models import BugTracker
 
-# Register your models here.
+
+class BugTrackerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'phone_model', 'android_version', 'description']
+
+
+admin.site.register(BugTracker, BugTrackerAdmin)
