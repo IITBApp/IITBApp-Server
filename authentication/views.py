@@ -1,15 +1,17 @@
+import json
+import uuid
+
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from serializers import UserSerializer
 import ldap
-import json
 from django.http import HttpResponse
 from rest_framework.decorators import list_route
-from models import UserToken
-from forms import LogoutForm
-import uuid
-from tokenauth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+from serializers import UserSerializer
+from models import UserToken
+from authentication.forms import LogoutForm
+from tokenauth import TokenAuthentication
 from iitbapp.permissions import IsCorrectUserId
 
 
