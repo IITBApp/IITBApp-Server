@@ -16,8 +16,12 @@ class TokenAuthentication(authentication.BaseAuthentication):
                 uuid_token = uuid.UUID(token)
                 user_token = UserToken.objects.all().filter(token=uuid_token)
                 if user_token.exists():
-                    user = user_token[0].user
-                    return user, user_token
+                    user_token = user_token[0]
+                    if user_token.is_active():
+                        user = user_token.user
+                        return user, user_token
+                    else:
+                        pass
             except ValueError:
                 pass
             raise exceptions.AuthenticationFailed('Invalid token')
