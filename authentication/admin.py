@@ -7,7 +7,7 @@ class DesignationAdmin(admin.ModelAdmin):
 
 
 class UserTokenAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'token']
+    list_display = ['id', 'user', 'token', 'created', 'last_accessed']
 
 admin.site.register(Designation, DesignationAdmin)
 admin.site.register(UserToken, UserTokenAdmin)
