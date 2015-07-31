@@ -1,10 +1,11 @@
 __author__ = 'dheerendra'
 
 from django import forms
+from django.utils.translation import gettext as _
+
 from news.models import News, NewsImage
 from authentication.models import Designation
-from django.utils.translation import gettext as _
-from globals import categories
+from core.globals import categories
 import news.signals as news_signals
 
 

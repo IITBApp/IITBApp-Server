@@ -1,11 +1,12 @@
 __author__ = 'dheerendra'
 
 from django import forms
-from event.models import Event, EventImage
-from authentication.models import Designation
 from django.utils.translation import gettext as _
 from django.utils import timezone
-from globals import categories, datetime_input_formats
+
+from event.models import Event, EventImage
+from authentication.models import Designation
+from core.globals import categories, datetime_input_formats
 import event.signals as event_signals
 
 

@@ -1,6 +1,7 @@
 from django.db import models
+
 from authentication.models import Designation
-from globals import notice_priority
+from core.globals import notice_priority
 
 
 class Notice(models.Model):

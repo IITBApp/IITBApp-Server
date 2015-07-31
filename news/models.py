@@ -1,9 +1,11 @@
+from uuid import uuid4
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
-from uuid import uuid4
+
 from authentication.models import Designation
-from globals import categories
-import os
+from core.globals import categories
 
 
 def news_images(instance, filename):

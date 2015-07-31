@@ -1,9 +1,11 @@
-from django.db import models
 import os
 from uuid import uuid4
-from authentication.models import Designation
+
+from django.db import models
 from django.contrib.auth.models import User
-from globals import categories
+
+from authentication.models import Designation
+from core.globals import categories
 
 
 def event_images(instance, filename):

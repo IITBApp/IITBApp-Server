@@ -1,10 +1,12 @@
 __author__ = 'dheerendra'
 
-from serializers import NoticeReadSerializer
-import django.dispatch
 import logging
 import json
-from globals import send_android_push_notification
+
+import django.dispatch
+
+from serializers import NoticeReadSerializer
+from core.globals import send_android_push_notification
 from models import Notice
 
 logger = logging.getLogger(__name__)
