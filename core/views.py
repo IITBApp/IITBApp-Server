@@ -1,13 +1,14 @@
-from django.shortcuts import render
 from rest_framework import viewsets
-from authentication.tokenauth import TokenAuthentication
-from iitbapp.permissions import IsCorrectUserId
 from rest_framework.permissions import IsAuthenticated
-from serializers import BugTrackerSerializer
-from models import BugTracker
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
+
+from authentication.tokenauth import TokenAuthentication
+from core.permissions import IsCorrectUserId
+from serializers import BugTrackerSerializer
+from models import BugTracker
+
 
 class BugTrackerViewset(viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]

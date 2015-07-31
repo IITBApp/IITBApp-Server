@@ -1,14 +1,15 @@
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import viewsets
-from models import Event, EventLike, EventViews
 from rest_framework.decorators import list_route
-from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated
-from iitbapp.permissions import IsCorrectUserId
-from authentication.tokenauth import TokenAuthentication
 from django.shortcuts import get_object_or_404
+
+from models import Event, EventLike, EventViews
+from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
+from core.permissions import IsCorrectUserId
+from authentication.tokenauth import TokenAuthentication
 
 
 class EventPagination(LimitOffsetPagination):

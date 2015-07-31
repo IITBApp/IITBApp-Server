@@ -12,7 +12,7 @@ from serializers import UserSerializer
 from models import UserToken
 from authentication.forms import LogoutForm
 from tokenauth import TokenAuthentication
-from iitbapp.permissions import IsCorrectUserId
+from core.permissions import IsCorrectUserId
 
 
 def authenticate_ldap(username, password, token):

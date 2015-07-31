@@ -1,14 +1,15 @@
 from rest_framework import viewsets
-from models import News, NewsLike, NewsViews
-from serializers import NewsReadSerializer, NewsLikeSerializer, NewsViewSerializer
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.pagination import LimitOffsetPagination
-from authentication.tokenauth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from iitbapp.permissions import IsCorrectUserId
 from django.shortcuts import get_object_or_404
+
+from models import News, NewsLike, NewsViews
+from serializers import NewsReadSerializer, NewsLikeSerializer, NewsViewSerializer
+from authentication.tokenauth import TokenAuthentication
+from core.permissions import IsCorrectUserId
 
 
 class NewsPagination(LimitOffsetPagination):
