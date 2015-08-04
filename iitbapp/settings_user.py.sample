@@ -32,3 +32,7 @@ MEDIA_URL = "/media/"
 STATIC_URL = "/static/"
 
 SESSION_COOKIE_PATH = "/"
+
+CSRF_COOKIE_PATH = "/"
+
+SECRET_KEY = '<SECRET KEY>'
