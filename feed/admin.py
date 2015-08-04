@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import FeedLike, FeedView
 
-# Register your models here.
+
+class FeedAdmin(admin.ModelAdmin):
+    list_display = ['guid', 'user']
+
+admin.site.register(FeedLike, FeedAdmin)
+admin.site.register(FeedView, FeedAdmin)
