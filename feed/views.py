@@ -36,6 +36,7 @@ class FeedViewset(viewsets.GenericViewSet):
             user = feed_view_serializer.data['user']
             self.check_object_permissions(request, user)
             feed_view, created = FeedView.objects.get_or_create(guid=guid, user_id=user)
+            feed_view.add_view()
             return Response(FeedViewSerializer(feed_view).data)
         else:
             return Response(feed_view_serializer.errors, status=HTTP_400_BAD_REQUEST)

@@ -31,8 +31,7 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             news_id = serializer.data['news']
             user_id = serializer.data['user']
             self.check_object_permissions(request, user_id)
-            news_like, created = NewsLike.objects.get_or_create(news__id=news_id, user__id=user_id,
-                                                                defaults={'news_id': news_id, 'user_id': user_id})
+            news_like, created = NewsLike.objects.get_or_create(news_id=news_id, user_id=user_id)
             return Response(NewsReadSerializer(news_like.news, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -57,8 +56,8 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
             news_id = serializer.data['news']
             user_id = serializer.data['user']
             self.check_object_permissions(request, user_id)
-            news_view, created = NewsViews.objects.get_or_create(news__id=news_id, user_id=user_id,
-                                                                 defaults={'news_id': news_id, 'user_id': user_id})
+            news_view, created = NewsViews.objects.get_or_create(news_id=news_id, user_id=user_id)
+            news_view.add_view()
             return Response(NewsReadSerializer(news_view.news, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

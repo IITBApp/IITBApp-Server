@@ -15,4 +15,8 @@ class FeedLike(Feed):
 
 
 class FeedView(Feed):
-    pass
+    view_count = models.IntegerField(default=0)
+
+    def add_view(self):
+        self.view_count += 1
+        self.save(update_fields=['view_count'])

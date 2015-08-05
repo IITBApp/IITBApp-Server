@@ -48,3 +48,8 @@ class NewsLike(models.Model):
 class NewsViews(models.Model):
     news = models.ForeignKey(News, related_name='views')
     user = models.ForeignKey(User)
+    view_count = models.IntegerField(default=0)
+
+    def add_view(self):
+        self.view_count += 1
+        self.save(update_fields=['view_count'])

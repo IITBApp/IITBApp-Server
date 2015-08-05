@@ -53,3 +53,4 @@ class FeedViewSerializer(FeedGenericSerializer):
 
     class Meta:
         model = FeedView
+        exclude = ['view_count']

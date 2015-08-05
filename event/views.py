@@ -31,8 +31,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             event_id = serializer.data['event']
             user_id = serializer.data['user']
             self.check_object_permissions(request, user_id)
-            event_like, created = EventLike.objects.get_or_create(event__id=event_id, user__id=user_id,
-                                                                  defaults={'event_id': event_id, 'user_id': user_id})
+            event_like, created = EventLike.objects.get_or_create(event_id=event_id, user_id=user_id)
             return Response(EventReadSerializer(event_like.event, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -57,8 +56,8 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             event_id = serializer.data['event']
             user_id = serializer.data['user']
             self.check_object_permissions(request, user_id)
-            event_view, created = EventViews.objects.get_or_create(event__id=event_id, user_id=user_id,
-                                                                   defaults={'event_id': event_id, 'user_id': user_id})
+            event_view, created = EventViews.objects.get_or_create(event_id=event_id, user_id=user_id)
+            event_view.add_view()
             return Response(EventReadSerializer(event_view.event, context={'request': request}).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
