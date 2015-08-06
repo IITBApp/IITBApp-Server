@@ -7,8 +7,10 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'category', 'posted_by', 'total_likes', 'unique_views', 'total_views']
 
     def get_queryset(self, request):
-        return Event.objects.all().annotate(total_likes=Count('likes'), unique_views=Count('views'),
-                                            total_views=Sum('views__view_count'))
+        queryset = Event.objects.all().annotate(total_likes=Count('likes', distinct=True),
+                                                unique_views=Count('views', distinct=True),
+                                                total_views=Sum('views__view_count'))
+        return queryset
 
     def total_likes(self, ins):
         return ins.total_likes
