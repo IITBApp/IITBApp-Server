@@ -1,6 +1,6 @@
 from django.contrib import admin
 from models import Event, EventImage, EventLike, EventViews
-from django.db.models import Count, Sum
+from django.db.models import Count
 
 
 class EventAdmin(admin.ModelAdmin):
