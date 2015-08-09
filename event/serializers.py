@@ -25,22 +25,16 @@ class EventReadSerializer(EventWriteSerializer):
     viewed = serializers.SerializerMethodField()
 
     def get_viewed(self, obj):
-        if not isinstance(obj, Event):
+        if hasattr(obj, 'viewed'):
+            return obj.liked
+        else:
             return False
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            return EventViews.objects.all().filter(event=obj).filter(user=user).exists()
-        return False
 
     def get_liked(self, obj):
-        if not isinstance(obj, Event):
+        if hasattr(obj, 'liked'):
+            return obj.liked
+        else:
             return False
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            return EventLike.objects.all().filter(event=obj).filter(user=user).exists()
-        return False
 
 
 class EventLikeSerializer(serializers.ModelSerializer):
