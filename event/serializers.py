@@ -26,7 +26,7 @@ class EventReadSerializer(EventWriteSerializer):
 
     def get_viewed(self, obj):
         if hasattr(obj, 'viewed'):
-            return obj.liked
+            return obj.viewed
         else:
             return False
 

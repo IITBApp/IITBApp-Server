@@ -25,22 +25,16 @@ class NewsReadSerializer(NewsWriteSerializer):
     viewed = serializers.SerializerMethodField()
 
     def get_viewed(self, obj):
-        if not isinstance(obj, News):
+        if hasattr(obj, 'viewed'):
+            return obj.viewed
+        else:
             return False
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            return NewsViews.objects.all().filter(news=obj).filter(user=user).exists()
-        return False
 
     def get_liked(self, obj):
-        if not isinstance(obj, News):
+        if hasattr(obj, 'liked'):
+            return obj.liked
+        else:
             return False
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            return NewsLike.objects.all().filter(news=obj).filter(user=user).exists()
-        return False
 
 
 class NewsLikeSerializer(serializers.ModelSerializer):
