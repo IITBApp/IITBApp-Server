@@ -1,9 +1,58 @@
 __author__ = 'dheerendra'
 
 from rest_framework import serializers
-from .models import FeedLike, FeedView, Feed
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
 
 
+class FeedEntrySerializer(serializers.ModelSerializer):
+    liked = serializers.SerializerMethodField()
+    viewed = serializers.SerializerMethodField()
+    likes = serializers.IntegerField(source='likes.count')
+    views = serializers.IntegerField(source='views.count')
+
+    def get_liked(self, obj):
+        if hasattr(obj, 'liked'):
+            return obj.liked
+        return False
+
+    def get_viewed(self, obj):
+        if hasattr(obj, 'viewed'):
+            return obj.viewed
+        return False
+
+    class Meta:
+        model = FeedEntry
+        fields = ['id', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes', 'views']
+
+
+class FeedConfigSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FeedConfig
+        fields = ['id', 'title', 'link', 'updated']
+
+
+class FeedConfigEntrySerializer(serializers.ModelSerializer):
+    entries = FeedEntrySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = FeedConfig
+        fields = ['id', 'title', 'link', 'updated', 'entries']
+
+
+class FeedEntryLikeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FeedEntryLike
+
+
+class FeedEntryViewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FeedEntryView
+
+
+#TODO: Remove Generic Serializer and FeedLike Serializer
 def parse_data(obj):
     return obj.guid, obj.user
 

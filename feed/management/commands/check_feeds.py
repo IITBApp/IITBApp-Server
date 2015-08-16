@@ -1,8 +1,8 @@
 __author__ = 'dheerendra'
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from feed.models import FeedConfig
-import sys
+from core.management.configuration import write_to_stdout
 
 
 class Command(BaseCommand):
@@ -13,8 +13,6 @@ class Command(BaseCommand):
 
         feed_configs = FeedConfig.objects.all()
         for feed_config in feed_configs:
-            sys.stdout.write("Started feed check for %s\n" % feed_config.title)
-            sys.stdout.flush()
+            write_to_stdout("Started feed check for %s\n" % feed_config.title)
             feed_config.check_feeds()
-            sys.stdout.write("Finished feed check for %s\n\n" % feed_config.title)
-            sys.stdout.flush()
+            write_to_stdout("Finished feed check for %s\n\n" % feed_config.title)

@@ -8,10 +8,12 @@ from django.utils.timezone import utc
 from datetime import timedelta, datetime
 import time
 import re
+import HTMLParser
+
 
 logger = logging.getLogger(__name__)
-
 non_image_html = re.compile(r'<img.*?/>')
+parser = HTMLParser.HTMLParser()
 
 
 class FeedError(Exception):
@@ -65,7 +67,7 @@ class FeedConfig(models.Model):
                 or 'title' not in feed
                 or 'link' not in feed
                 ):
-                raise FeedError('Feed parsed but with invalid contents')
+                raise FeedError('Feed parsed but with invalid contents for %s' % self.title)
 
             # OK
             return feed, entries, etag
@@ -129,11 +131,11 @@ class FeedConfig(models.Model):
                 feed_entry = FeedEntry(entry_id=entry_id)
 
             feed_entry.feed_config = self
-            feed_entry.title = entry.title
+            feed_entry.title = parser.unescape(entry.title)
             feed_entry.link = entry.link
             feed_entry.updated = entry.updated
             feed_entry.published = entry.published
-            feed_entry.content = entry.content[0].value
+            feed_entry.content = non_image_html.sub('', entry.content[0].value)
             feed_entry.author = entry.author
             feed_entry.save()
 
@@ -153,6 +155,24 @@ class FeedEntry(models.Model):
     published = models.DateTimeField()
     content = models.TextField()
     author = models.CharField(max_length=64)
+
+    def __unicode__(self):
+        return self.title
+
+
+class FeedEntryLike(models.Model):
+    entry = models.ForeignKey(FeedEntry, related_name='likes')
+    user = models.ForeignKey(User)
+
+
+class FeedEntryView(models.Model):
+    entry = models.ForeignKey(FeedEntry, related_name='views')
+    user = models.ForeignKey(User)
+    view_count = models.IntegerField(default=0)
+
+    def add_view(self):
+        self.view_count += 1
+        self.save()
 
 
 class Feed(models.Model):
