@@ -32,6 +32,10 @@ class Command(BaseCommand):
         else:
             feed_configs = FeedConfig.objects.all().values('check_frequency')
             frequencies = [config.get('check_frequency') for config in feed_configs]
+            if len(frequencies) < 1:
+                frequencies.append(30)
+            if len(frequencies) < 2:
+                frequencies.append(30)
             gcd_frequencies = reduce(gcd, frequencies)
             executable = sys.executable
             manage_py_path = os.path.join(settings.BASE_DIR, 'manage.py')
