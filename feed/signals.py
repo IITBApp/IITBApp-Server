@@ -24,10 +24,10 @@ def create_message(instance, created):
     return json.dumps(message_dict)
 
 
-def send_notice_push_notification(sender, instance, created, **kwargs):
+def send_feed_push_notification(sender, instance, created, **kwargs):
     message = create_message(instance, created)
     send_android_push_notification(message)
     logger.info("Android push sent for feed with id %d with title %s", instance.id, instance.title)
 
 
-signals.post_save.connect(send_notice_push_notification, FeedEntry)
+signals.post_save.connect(send_feed_push_notification, FeedEntry)
