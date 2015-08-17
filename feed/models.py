@@ -63,11 +63,12 @@ class FeedConfig(models.Model):
 
         if status in (200, 302, 304, 307):
             # Check for valid feed
-            if (feed is None
-                or 'title' not in feed
-                or 'link' not in feed
-                ):
-                raise FeedError('Feed parsed but with invalid contents for %s' % self.title)
+            if feed is None:
+                raise FeedError('(Feed Parsed) None Feed for %s' % self.title)
+            if 'title' not in feed:
+                raise FeedError('(Feed Parsed) title not present in %s' % self.title)
+            if 'link' not in feed:
+                raise FeedError('(Feed Parsed) link not present in %s' % self.link)
 
             # OK
             return feed, entries, etag
@@ -97,6 +98,11 @@ class FeedConfig(models.Model):
             entries = e.entries
             etag = e.etag
 
+        self.etag = etag
+        self.last_checked = now
+        self.save()
+        self.refresh_from_db()
+
         if feed is None:
             return
 
@@ -112,10 +118,8 @@ class FeedConfig(models.Model):
             ).replace(tzinfo=utc)
 
         self.updated = updated
-        self.etag = etag
         self.title = feed.get('title', self.title)
         self.link = feed.get('link', self.link)
-        self.last_checked = now
 
         self.save()
 

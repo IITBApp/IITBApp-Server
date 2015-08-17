@@ -176,16 +176,22 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs/django.log'),
             'formatter': 'verbose'
             },
-        'file': {
+        'file_application': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/application.log'),
             'formatter': 'verbose'
             },
+        'file_feed': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/feeds.log'),
+            'formatter': 'verbose'
+            },
         },
     'loggers': {
         '': {
-            'handlers': ['file'],
+            'handlers': ['file_application'],
             'level': 'INFO',
             },
         'django': {
@@ -193,6 +199,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
             },
+        'feed': {
+            'handlers': ['file_feed'],
+            'level': 'INFO',
+            'propagate': False,
+        }
         },
 
     }
