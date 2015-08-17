@@ -98,7 +98,6 @@ class FeedConfig(models.Model):
             entries = e.entries
             etag = e.etag
 
-        self.etag = etag
         self.last_checked = now
         self.save()
         self.refresh_from_db()
@@ -117,6 +116,7 @@ class FeedConfig(models.Model):
                 time.mktime(updated)
             ).replace(tzinfo=utc)
 
+        self.etag = etag
         self.updated = updated
         self.title = feed.get('title', self.title)
         self.link = feed.get('link', self.link)

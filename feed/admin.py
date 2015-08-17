@@ -27,7 +27,7 @@ class FeedConfigForm(forms.ModelForm):
 
 
 class FeedConfigAdmin(admin.ModelAdmin):
-    list_display = ['title', 'link', 'updated', 'last_checked', 'updated', 'check_frequency', 'etag']
+    list_display = ['title', 'link', 'updated', 'last_checked', 'check_frequency', 'etag']
     exclude = ['url']
 
     form = FeedConfigForm
