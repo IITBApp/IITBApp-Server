@@ -12,6 +12,7 @@ from rest_framework import filters
 from rest_framework.exceptions import ValidationError
 from django.db.models import When, Case, Q, F
 from django.db import models
+from core.pagination import DefaultLimitOffsetPagination
 
 
 class FeedConfigIdFilter(filters.BaseFilterBackend):
@@ -34,6 +35,24 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated, IsCorrectUserId]
     queryset = FeedConfig.objects.all().order_by('-id')
     filter_backends = [FeedConfigIdFilter]
+    pagination_class = DefaultLimitOffsetPagination
+
+    def get_feed_entry_queryset(self):
+        user = self.request.user
+        feed_entries = FeedEntry.objects.all().annotate(
+            viewed=Case(
+                When(Q(views__user=user) & Q(views__entry=F('id')), then=True),
+                output_field=models.BooleanField(),
+                default=False
+            ),
+            liked=Case(
+                When(Q(likes__user=user) & Q(likes__entry=F('id')), then=True),
+                output_field=models.BooleanField(),
+                default=False
+            )
+        )
+        return feed_entries
+
 
     @list_route(methods=['GET'])
     def entries(self, request):
@@ -43,19 +62,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
         feed_configs = self.filter_queryset(self.get_queryset())
         feed_tuples = []
         for feed_config in feed_configs:
-            feed_entries = FeedEntry.objects.all().filter(feed_config=feed_config).annotate(
-                viewed=Case(
-                    When(Q(views__user=request.user) & Q(views__entry=F('id')), then=True),
-                    output_field=models.BooleanField(),
-                    default=False
-                ),
-                liked=Case(
-                    When(Q(likes__user=request.user) & Q(likes__entry=F('id')), then=True),
-                    output_field=models.BooleanField(),
-                    default=False
-
-                )
-            ).order_by('-updated')[0:20]
+            feed_entries = self.get_feed_entry_queryset().filter(feed_config=feed_config).order_by('-updated')[0:20]
             feed_tuples.append((feed_config, feed_entries))
 
         serialized_result = []
@@ -75,7 +82,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             user_id = feed_entry_like_serialized.data['user']
             self.check_object_permissions(request, user_id)
             feed_entry_like, created = FeedEntryLike.objects.get_or_create(entry_id=entry_id, user_id=user_id)
-            return Response(FeedEntrySerializer(feed_entry_like.entry).data)
+            return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
             return Response(feed_entry_like_serialized.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -88,7 +95,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             self.check_object_permissions(request, user_id)
             feed_entry_view, created = FeedEntryView.objects.get_or_create(entry_id=entry_id, user_id=user_id)
             feed_entry_view.add_view()
-            return Response(FeedEntrySerializer(feed_entry_view.entry).data)
+            return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
             return Response(feed_entry_view_serialized.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -101,7 +108,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             self.check_object_permissions(request, user_id)
             FeedEntryLike.objects.all().filter(entry_id=entry_id).filter(user_id=user_id).delete()
             feed_entry = FeedEntry.objects.get(pk=entry_id)
-            return Response(FeedEntrySerializer(feed_entry).data)
+            return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
             return Response(feed_entry_like_serializer.errors, status=HTTP_400_BAD_REQUEST)
 
