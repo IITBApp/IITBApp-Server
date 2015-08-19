@@ -13,13 +13,11 @@ logger = logging.getLogger(__name__)
 def create_message(instance, created):
     instance.refresh_from_db()
     action = 'new' if created else 'update'
-    feed_config_data = FeedConfigSerializer(instance.feed_config).data
-    feed_entry_data = [FeedEntrySerializer(instance).data]
-    feed_config_data['entries'] = feed_entry_data
+    feed_entry_data = FeedEntrySerializer(instance).data
     message_dict = {
         'action': action,
         'type': 'feed',
-        'item': feed_config_data,
+        'item': feed_entry_data,
     }
     return json.dumps(message_dict)
 

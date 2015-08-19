@@ -8,7 +8,7 @@ import uuid
 class TokenAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request):
-        token = request.META.get('HTTP_TOKEN_AUTH')
+        token = request.META.get('HTTP_TOKEN_AUTH') or request.query_params.get('token-auth')
         if not token:
             return None
         else:

@@ -15,6 +15,13 @@ from django.db import models
 from core.pagination import DefaultLimitOffsetPagination
 
 
+class DummyFeedEntryPagination(DefaultLimitOffsetPagination):
+
+    count = 0
+    offset = 0
+    limit = 0
+
+
 class FeedConfigIdFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         ids = request.query_params.get('id', '')
@@ -35,7 +42,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated, IsCorrectUserId]
     queryset = FeedConfig.objects.all().order_by('-id')
     filter_backends = [FeedConfigIdFilter]
-    pagination_class = DefaultLimitOffsetPagination
+    pagination_class = DummyFeedEntryPagination
 
     def get_feed_entry_queryset(self):
         user = self.request.user
@@ -50,7 +57,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
                 output_field=models.BooleanField(),
                 default=False
             )
-        )
+        ).order_by('-updated')
         return feed_entries
 
 
@@ -60,19 +67,14 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
         # TODO: If you're going to change this, then make it flexible. Try to remove the 0:20 limit in better fashion
         feed_configs = self.filter_queryset(self.get_queryset())
-        feed_tuples = []
+        all_feed_entries = []
         for feed_config in feed_configs:
             feed_entries = self.get_feed_entry_queryset().filter(feed_config=feed_config).order_by('-updated')[0:20]
-            feed_tuples.append((feed_config, feed_entries))
+            all_feed_entries.extend(feed_entries)
 
-        serialized_result = []
-
-        for feed_tuple in feed_tuples:
-            serialized_feed_config = FeedConfigSerializer(feed_tuple[0]).data
-            serialized_feed_entries = FeedEntrySerializer(feed_tuple[1], many=True).data
-            serialized_feed_config['entries'] = serialized_feed_entries
-            serialized_result.append(serialized_feed_config)
-        return Response(serialized_result)
+        serialized_entries = FeedEntrySerializer(all_feed_entries, many=True).data
+        response_data = self.get_paginated_response(serialized_entries)
+        return response_data
 
     @list_route(methods=['POST'])
     def like(self, request):

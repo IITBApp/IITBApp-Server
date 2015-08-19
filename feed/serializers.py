@@ -22,7 +22,7 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FeedEntry
-        fields = ['id', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes', 'views']
+        fields = ['id', 'feed_config', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes', 'views']
 
 
 class FeedConfigSerializer(serializers.ModelSerializer):
@@ -30,14 +30,6 @@ class FeedConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedConfig
         fields = ['id', 'title', 'link', 'updated']
-
-
-class FeedConfigEntrySerializer(serializers.ModelSerializer):
-    entries = FeedEntrySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = FeedConfig
-        fields = ['id', 'title', 'link', 'updated', 'entries']
 
 
 class FeedEntryLikeSerializer(serializers.ModelSerializer):
