@@ -9,8 +9,7 @@ from models import Event, EventLike, EventViews
 from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
 from core.permissions import IsCorrectUserId
 from authentication.tokenauth import TokenAuthentication
-from django.db.models import Case, When, Q, F
-from django.db import models
+from django.db.models import Prefetch
 
 
 class EventPagination(LimitOffsetPagination):
@@ -27,6 +26,12 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         request = self.request
+        queryset = Event.objects.all().order_by('-id').prefetch_related(
+            Prefetch('likes', EventLike.objects.all().filter(user=request.user), 'liked')
+        ).prefetch_related(
+            Prefetch('views', EventViews.objects.all().filter(user=request.user), 'viewed')
+        )
+        """
         queryset = Event.objects.all().order_by('-id').annotate(
             viewed = Case(
                 When(Q(views__user=request.user) & Q(views__event=F('id')), then=True),
@@ -40,6 +45,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
 
             )
         )
+        """
         return queryset
 
     @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])

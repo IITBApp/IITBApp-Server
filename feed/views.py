@@ -10,8 +10,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework import filters
 from rest_framework.exceptions import ValidationError
-from django.db.models import When, Case, Q, F
-from django.db import models
+from django.db.models import Prefetch
 from core.pagination import DefaultLimitOffsetPagination
 
 
@@ -46,18 +45,11 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     def get_feed_entry_queryset(self):
         user = self.request.user
-        feed_entries = FeedEntry.objects.all().annotate(
-            viewed=Case(
-                When(Q(views__user=user) & Q(views__entry=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-            ),
-            liked=Case(
-                When(Q(likes__user=user) & Q(likes__entry=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-            )
-        ).order_by('-updated')
+        feed_entries = FeedEntry.objects.all().order_by('-updated').prefetch_related(
+            Prefetch('likes', FeedEntryLike.objects.all().filter(user=user), 'liked')
+        ).prefetch_related(
+            Prefetch('views', FeedEntryView.objects.all().filter(user=user), 'viewed')
+        )
         return feed_entries
 
     @list_route(methods=['GET'])

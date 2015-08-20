@@ -4,9 +4,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
-from django.db.models import Case, When, Q, F
-from django.db import models
+from django.db.models import Prefetch
 
 from models import News, NewsLike, NewsViews
 from serializers import NewsReadSerializer, NewsLikeSerializer, NewsViewSerializer
@@ -28,18 +26,10 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         request = self.request
-        queryset = News.objects.all().order_by('-id').annotate(
-            viewed=Case(
-                When(Q(views__user=request.user) & Q(views__news=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-            ),
-            liked=Case(
-                When(Q(likes__user=request.user) & Q(likes__news=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-
-            )
+        queryset = News.objects.all().order_by('-id').prefetch_related(
+            Prefetch('likes', NewsLike.objects.all().filter(user=request.user), 'liked')
+        ).prefetch_related(
+            Prefetch('views', NewsLike.objects.all().filter(user=request.user), 'viewed')
         )
         return queryset
 

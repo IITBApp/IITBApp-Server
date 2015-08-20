@@ -20,12 +20,12 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 
     def get_liked(self, obj):
         if hasattr(obj, 'liked'):
-            return obj.liked
+            return len(obj.liked) > 0
         return False
 
     def get_viewed(self, obj):
         if hasattr(obj, 'viewed'):
-            return obj.viewed
+            return len(obj.viewed) > 0
         return False
 
     class Meta:

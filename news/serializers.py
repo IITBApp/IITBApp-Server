@@ -26,13 +26,13 @@ class NewsReadSerializer(NewsWriteSerializer):
 
     def get_viewed(self, obj):
         if hasattr(obj, 'viewed'):
-            return obj.viewed
+            return len(obj.viewed) > 0
         else:
             return False
 
     def get_liked(self, obj):
         if hasattr(obj, 'liked'):
-            return obj.liked
+            return len(obj.liked) > 0
         else:
             return False
 
