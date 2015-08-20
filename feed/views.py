@@ -15,23 +15,35 @@ from core.pagination import DefaultLimitOffsetPagination
 
 
 class DummyFeedEntryPagination(DefaultLimitOffsetPagination):
+    pass
 
-    count = 0
-    offset = 0
-    limit = 0
+
+def get_ids(request):
+    ids = request.query_params.get('id', '')
+    ids = ids.split(',')
+    ids = [id_ for id_ in ids if id_ != '']
+    is_valid = all(id_.isdigit() for id_ in ids)
+    if not is_valid:
+        raise ValidationError('id should be a list of integers')
+    ids = map(int, ids)
+    return ids
 
 
 class FeedConfigIdFilter(filters.BaseFilterBackend):
+
     def filter_queryset(self, request, queryset, view):
-        ids = request.query_params.get('id', '')
-        ids = ids.split(',')
-        ids = [id_ for id_ in ids if id_ != '']
-        is_valid = all(id_.isdigit() for id_ in ids)
-        if not is_valid:
-            raise ValidationError('id should be integer of list of integers')
-        ids = map(int, ids)
+        ids = get_ids(request)
         if ids:
             return queryset.filter(pk__in=ids)
+        return queryset
+
+
+class FeedEntryByConfigFilter(filters.BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        ids = get_ids(request)
+        if ids:
+            return queryset.filter(feed_config_id__in=ids)
         return queryset
 
 
@@ -40,8 +52,8 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, IsCorrectUserId]
     queryset = FeedConfig.objects.all().order_by('-id')
-    filter_backends = [FeedConfigIdFilter]
     pagination_class = DummyFeedEntryPagination
+    filter_backends = [FeedConfigIdFilter]
 
     def get_feed_entry_queryset(self):
         user = self.request.user
@@ -57,13 +69,17 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
         # TODO: Clean up this hack if you get a chance off your lazy ass
 
         # TODO: If you're going to change this, then make it flexible. Try to remove the 0:20 limit in better fashion
-        feed_configs = self.filter_queryset(self.get_queryset())
+        feed_entries = FeedEntryByConfigFilter().filter_queryset(request, self.get_feed_entry_queryset(), self)
+
+        """
+        feed_configs = FeedConfigIdFilter().filter_queryset(self.get_queryset())
         all_feed_entries = []
         for feed_config in feed_configs:
             feed_entries = self.get_feed_entry_queryset().filter(feed_config=feed_config).order_by('-updated')[0:20]
             all_feed_entries.extend(feed_entries)
-
-        serialized_entries = FeedEntrySerializer(all_feed_entries, many=True).data
+        """
+        feed_entries = self.paginate_queryset(feed_entries)
+        serialized_entries = FeedEntrySerializer(feed_entries, many=True).data
         response_data = self.get_paginated_response(serialized_entries)
         return response_data
 
