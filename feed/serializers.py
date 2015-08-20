@@ -9,6 +9,14 @@ class FeedEntrySerializer(serializers.ModelSerializer):
     viewed = serializers.SerializerMethodField()
     likes = serializers.IntegerField(source='likes.count')
     views = serializers.IntegerField(source='views.count')
+    images = serializers.SerializerMethodField()
+
+    def get_images(self, obj):
+        images = obj.images
+        if images:
+            return images.split(",")
+        else:
+            return []
 
     def get_liked(self, obj):
         if hasattr(obj, 'liked'):
@@ -22,29 +30,27 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FeedEntry
-        fields = ['id', 'feed_config', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes', 'views']
+        fields = ['id', 'feed_config', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes',
+                  'views', 'images']
 
 
 class FeedConfigSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FeedConfig
         fields = ['id', 'title', 'link', 'updated']
 
 
 class FeedEntryLikeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FeedEntryLike
 
 
 class FeedEntryViewSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = FeedEntryView
 
 
-#TODO: Remove Generic Serializer and FeedLike Serializer
+# TODO: Remove Generic Serializer and FeedLike Serializer
 def parse_data(obj):
     return obj.guid, obj.user
 
@@ -85,13 +91,11 @@ class FeedGenericSerializer(serializers.ModelSerializer):
 
 
 class FeedLikeSerializer(FeedGenericSerializer):
-
     class Meta:
         model = FeedLike
 
 
 class FeedViewSerializer(FeedGenericSerializer):
-
     class Meta:
         model = FeedView
         exclude = ['view_count']

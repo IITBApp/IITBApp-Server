@@ -9,6 +9,7 @@ from datetime import timedelta, datetime
 import time
 import re
 import HTMLParser
+import bs4
 
 
 logger = logging.getLogger(__name__)
@@ -135,6 +136,11 @@ class FeedConfig(models.Model):
             except FeedEntry.DoesNotExist:
                 feed_entry = FeedEntry(entry_id=entry_id)
 
+            soup = bs4.BeautifulSoup(entry.content[0].value)
+
+            images = [image['src'] for image in soup.find_all('img') if image['src'].startswith(self.link)]
+            images = ",".join(images)
+
             feed_entry.feed_config = self
             feed_entry.title = parser.unescape(entry.title)
             feed_entry.link = entry.link
@@ -142,6 +148,7 @@ class FeedConfig(models.Model):
             feed_entry.published = entry.published
             feed_entry.content = non_image_html.sub('', entry.content[0].value)
             feed_entry.author = entry.author
+            feed_entry.images = images
             feed_entry.save()
 
     def __unicode__(self):
@@ -160,6 +167,7 @@ class FeedEntry(models.Model):
     published = models.DateTimeField()
     content = models.TextField()
     author = models.CharField(max_length=64)
+    images = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.title
