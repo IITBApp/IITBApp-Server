@@ -23,7 +23,7 @@ class Command(BaseCommand):
                             help='Delete all feed cron jobs')
 
     def handle(self, *args, **options):
-        cron_tab = CronTab()
+        cron_tab = CronTab(user=True)
         cron_tab.remove_all(comment=self.comment)
 
         if options['delete']:
