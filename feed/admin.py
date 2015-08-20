@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import FeedLike, FeedView, FeedConfig, FeedEntry
 from django import forms
 from django.db.models import Count
+from django.core.management import call_command
 
 
 def check_feed_action(modeladmin, request, queryset):
@@ -20,6 +21,7 @@ class FeedConfigForm(forms.ModelForm):
         feed_config = super(FeedConfigForm, self).save(commit)
         feed_config.url = self.cleaned_data['url']
         feed_config.save()
+        call_command('feed_cron')
         return feed_config
 
     class Meta:

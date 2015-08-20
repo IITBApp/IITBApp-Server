@@ -12,7 +12,7 @@ import os
 
 class Command(BaseCommand):
     help = 'Add feed checking cron job'
-    comment = 'CHECK_FEED_CRON'
+    comment = 'CHECK_FEED_CRON %s' % settings.VERSION
     check_command = 'check_feeds'
 
     def add_arguments(self, parser):

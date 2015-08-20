@@ -36,3 +36,5 @@ SESSION_COOKIE_PATH = "/"
 CSRF_COOKIE_PATH = "/"
 
 SECRET_KEY = '<SECRET KEY>'
+
+VERSION = "dev" #dev, prod, local
