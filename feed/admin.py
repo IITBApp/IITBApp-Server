@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import FeedLike, FeedView, FeedConfig, FeedEntry
 from django import forms
+from django.db.models import Count
 
 
 def check_feed_action(modeladmin, request, queryset):
@@ -27,16 +28,30 @@ class FeedConfigForm(forms.ModelForm):
 
 
 class FeedConfigAdmin(admin.ModelAdmin):
-    list_display = ['title', 'link', 'updated', 'last_checked', 'check_frequency', 'etag']
+    list_display = ['title', 'link', 'updated', 'last_checked', 'check_frequency', 'etag', 'entry_count']
     exclude = ['url']
-
     form = FeedConfigForm
-
     actions = [check_feed_action]
+
+    def get_queryset(self, request):
+        return FeedConfig.objects.all().annotate(entry_count=Count('entries', distinct=True))
+
+    def entry_count(self, ins):
+        return ins.entry_count
 
 
 class FeedEntryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'entry_id', 'feed_config', 'title', 'updated', 'published']
+    list_display = ['id', 'feed_config', 'title', 'updated', 'published', 'total_likes', 'total_views']
+
+    def get_queryset(self, request):
+        return FeedEntry.objects.all().annotate(total_likes=Count('likes', distinct=True),
+                                                total_views=Count('views', distinct=True))
+
+    def total_likes(self, ins):
+        return ins.total_likes
+
+    def total_views(self, ins):
+        return ins.total_views
 
 
 class FeedAdmin(admin.ModelAdmin):

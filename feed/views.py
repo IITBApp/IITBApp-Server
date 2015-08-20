@@ -60,7 +60,6 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
         ).order_by('-updated')
         return feed_entries
 
-
     @list_route(methods=['GET'])
     def entries(self, request):
         # TODO: Clean up this hack if you get a chance off your lazy ass
@@ -83,7 +82,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             entry_id = feed_entry_like_serialized.data['entry']
             user_id = feed_entry_like_serialized.data['user']
             self.check_object_permissions(request, user_id)
-            feed_entry_like, created = FeedEntryLike.objects.get_or_create(entry_id=entry_id, user_id=user_id)
+            FeedEntryLike.objects.get_or_create(entry_id=entry_id, user_id=user_id)
             return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
             return Response(feed_entry_like_serialized.errors, status=HTTP_400_BAD_REQUEST)
@@ -109,7 +108,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             user_id = feed_entry_like_serializer.data['user']
             self.check_object_permissions(request, user_id)
             FeedEntryLike.objects.all().filter(entry_id=entry_id).filter(user_id=user_id).delete()
-            feed_entry = FeedEntry.objects.get(pk=entry_id)
+            FeedEntry.objects.get(pk=entry_id)
             return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
             return Response(feed_entry_like_serializer.errors, status=HTTP_400_BAD_REQUEST)
