@@ -14,10 +14,6 @@ from django.db.models import Prefetch
 from core.pagination import DefaultLimitOffsetPagination
 
 
-class DummyFeedEntryPagination(DefaultLimitOffsetPagination):
-    pass
-
-
 def get_ids(request):
     ids = request.query_params.get('id', '')
     ids = ids.split(',')
@@ -52,7 +48,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, IsCorrectUserId]
     queryset = FeedConfig.objects.all().order_by('-id')
-    pagination_class = DummyFeedEntryPagination
+    pagination_class = DefaultLimitOffsetPagination
     filter_backends = [FeedConfigIdFilter]
 
     def get_feed_entry_queryset(self):
@@ -66,22 +62,10 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     @list_route(methods=['GET'])
     def entries(self, request):
-        # TODO: Clean up this hack if you get a chance off your lazy ass
-
-        # TODO: If you're going to change this, then make it flexible. Try to remove the 0:20 limit in better fashion
         feed_entries = FeedEntryByConfigFilter().filter_queryset(request, self.get_feed_entry_queryset(), self)
-
-        """
-        feed_configs = FeedConfigIdFilter().filter_queryset(self.get_queryset())
-        all_feed_entries = []
-        for feed_config in feed_configs:
-            feed_entries = self.get_feed_entry_queryset().filter(feed_config=feed_config).order_by('-updated')[0:20]
-            all_feed_entries.extend(feed_entries)
-        """
         feed_entries = self.paginate_queryset(feed_entries)
         serialized_entries = FeedEntrySerializer(feed_entries, many=True).data
-        response_data = self.get_paginated_response(serialized_entries)
-        return response_data
+        return self.get_paginated_response(serialized_entries)
 
     @list_route(methods=['POST'])
     def like(self, request):
