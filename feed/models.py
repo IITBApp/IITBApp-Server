@@ -129,7 +129,8 @@ class FeedConfig(models.Model):
             entry_id = entry.id
             try:
                 feed_entry = FeedEntry.objects.get(entry_id=entry_id)
-                if feed_entry.updated == entry.updated:
+                entry_updated = datetime.fromtimestamp(time.mktime(entry.updated_parsed)).replace(tzinfo=utc)
+                if feed_entry.updated == entry_updated:
                     continue
             except FeedEntry.DoesNotExist:
                 feed_entry = FeedEntry(entry_id=entry_id)
