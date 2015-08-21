@@ -9,4 +9,4 @@ nohup gunicorn iitbapp.wsgi:application \
     --access-logformat "%(h)s %(D)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s" \
     --access-logfile "logs/gunicorn_access.log" \
     --error-logfile "logs/gunicorn_error.log" \
-    --log-file "logs/gunicorn_logs.log"
+    --log-file "logs/gunicorn_logs.log" &
