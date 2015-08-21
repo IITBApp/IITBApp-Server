@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import FeedLike, FeedView, FeedConfig, FeedEntry
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
 from django import forms
 from django.db.models import Count
 from django.core.management import call_command
+from django.db.models import Prefetch
 
 
 def check_feed_action(modeladmin, request, queryset):
@@ -46,14 +47,15 @@ class FeedEntryAdmin(admin.ModelAdmin):
     list_display = ['id', 'feed_config', 'title', 'updated', 'published', 'total_likes', 'total_views']
 
     def get_queryset(self, request):
-        return FeedEntry.objects.all().annotate(total_likes=Count('likes', distinct=True),
-                                                total_views=Count('views', distinct=True))
+        return FeedEntry.objects.all().prefetch_related(
+            Prefetch('likes', FeedEntryLike.objects.all())
+        ).prefetch_related(Prefetch('views', FeedEntryView.objects.all()))
 
     def total_likes(self, ins):
-        return ins.total_likes
+        return ins.likes.count()
 
     def total_views(self, ins):
-        return ins.total_views
+        return ins.views.count()
 
 
 class FeedAdmin(admin.ModelAdmin):

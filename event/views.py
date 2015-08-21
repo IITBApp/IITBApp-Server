@@ -31,21 +31,6 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         ).prefetch_related(
             Prefetch('views', EventViews.objects.all().filter(user=request.user), 'viewed')
         )
-        """
-        queryset = Event.objects.all().order_by('-id').annotate(
-            viewed = Case(
-                When(Q(views__user=request.user) & Q(views__event=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-            ),
-            liked= Case(
-                When(Q(likes__user=request.user) & Q(likes__event=F('id')), then=True),
-                output_field=models.BooleanField(),
-                default=False
-
-            )
-        )
-        """
         return queryset
 
     @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])

@@ -155,6 +155,7 @@ USE_TZ = True
 LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s [%(asctime)s] [%(name)s] [%(module)s] [Process:%(process)d] '
@@ -203,7 +204,7 @@ LOGGING = {
             'handlers': ['file_feed'],
             'level': 'INFO',
             'propagate': False,
-        }
+            },
         },
 
     }
