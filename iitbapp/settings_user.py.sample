@@ -1,17 +1,24 @@
 
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
 # Email server settings
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = "587"
 
-EMAIL_USERNAME = ""
-EMAIL_PASSWORD = ""
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
 
 EMAIL_FROM = ""
 
-# Registration
-ALLOWED_DOMAINS = [
-    'iitb.ac.in',
-]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+ADMINS = []
+
+SERVER_EMAIL = "root@localhost"
+
+EMAIL_SUBJECT_PREFIX = '[Django] '
 
 
 # DB Setting

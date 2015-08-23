@@ -26,9 +26,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
+
+SECURE_BROWSER_XSS_FILTER = True
 
 LOGIN_URL = 'login_page'
 
@@ -39,6 +41,7 @@ CACHES = {
     }
 }
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Application definition
 
@@ -118,9 +121,7 @@ else:
         }
     }
 
-ADMINS = (
-    ('Dheerendra Rathor', 'dheeru.rathor14@gmail.com'),
-    )
+ADMINS = config.ADMINS
 
 MANAGERS = ADMINS
 
@@ -197,6 +198,10 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs/feeds.log'),
             'formatter': 'verbose'
             },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+            },
         },
     'loggers': {
         '': {
@@ -204,7 +209,7 @@ LOGGING = {
             'level': 'INFO',
             },
         'django': {
-            'handlers': ['file_django'],
+            'handlers': ['file_django', 'mail_admins'],
             'level': 'INFO',
             'propagate': False,
             },
@@ -237,10 +242,14 @@ EMAIL_PORT = config.EMAIL_PORT
 
 EMAIL_FROM = config.EMAIL_FROM
 
-EMAIL_USERNAME = config.EMAIL_USERNAME
-EMAIL_PASSWORD = config.EMAIL_PASSWORD
+EMAIL_HOST_USER = config.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
 
-ALLOWED_DOMAINS = config.ALLOWED_DOMAINS
+EMAIL_BACKEND = config.EMAIL_BACKEND
+
+SERVER_EMAIL = config.SERVER_EMAIL
+
+EMAIL_SUBJECT_PREFIX = config.EMAIL_SUBJECT_PREFIX
 
 GCM_APIKEY = config.GCM_KEY
 
