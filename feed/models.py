@@ -136,7 +136,7 @@ class FeedConfig(models.Model):
             except FeedEntry.DoesNotExist:
                 feed_entry = FeedEntry(entry_id=entry_id)
 
-            soup = bs4.BeautifulSoup(entry.content[0].value)
+            soup = bs4.BeautifulSoup(entry.content[0].value, 'html.parser')
 
             images = [image['src'] for image in soup.find_all('img') if image['src'].startswith(self.link)]
             images = ",".join(images)
