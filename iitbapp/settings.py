@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'content',
     'core',
     'feed',
+    'tag',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -152,6 +153,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# LOGGING ZONE
+
 LOGGING_CONFIG = None
 LOGGING = {
     'version': 1,
@@ -163,6 +166,11 @@ LOGGING = {
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'suppress_deprecated_warnings': {
+            '()': 'iitbapp.filters.SuppressDeprecatedWarnings',
         },
     },
     'handlers': {
@@ -181,7 +189,8 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/application.log'),
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'filters': ['suppress_deprecated_warnings'],
             },
         'file_feed': {
             'level': 'DEBUG',
@@ -209,6 +218,7 @@ LOGGING = {
 
     }
 logging.config.dictConfig(LOGGING)
+
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
