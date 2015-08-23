@@ -59,7 +59,6 @@ INSTALLED_APPS = (
     'content',
     'core',
     'feed',
-    'tag',
 )
 
 MIDDLEWARE_CLASSES = (
