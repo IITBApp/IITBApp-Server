@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import settings_user as config
 import logging.config
 import socket
+
+import settings_user as config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -132,7 +133,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'iitbapp/staticfiles/')
 STATICFILES_DIRS = (
     # Add all static files here. use os.path.join(BASE_DIR, 'your/staticfile/path')
     os.path.join(BASE_DIR, 'iitbapp/static'),
-    )
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -178,57 +179,59 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
-            },
+        },
         'file_django': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/django.log'),
             'formatter': 'verbose'
-            },
+        },
         'file_application': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/application.log'),
             'formatter': 'verbose',
             'filters': ['suppress_deprecated_warnings'],
-            },
+        },
         'file_feed': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/feeds.log'),
             'formatter': 'verbose'
-            },
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
-            },
         },
+    },
     'loggers': {
         '': {
             'handlers': ['file_application'],
             'level': 'INFO',
-            },
+        },
+        'gcm': {
+            'handlers': ['file_application'],
+            'level': 'DEBUG',
+        },
         'django': {
             'handlers': ['file_django', 'mail_admins'],
             'level': 'INFO',
             'propagate': False,
-            },
+        },
         'feed': {
             'handlers': ['file_feed'],
             'level': 'INFO',
             'propagate': False,
-            },
         },
+    },
 
-    }
+}
 logging.config.dictConfig(LOGGING)
-
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
