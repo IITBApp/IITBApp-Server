@@ -11,9 +11,9 @@ import re
 import HTMLParser
 import bs4
 
-
 logger = logging.getLogger(__name__)
 non_image_html = re.compile(r'<img.*?/>')
+jpg_png_image = re.compile(r'(jpe?g)|(png)$', re.IGNORECASE)
 parser = HTMLParser.HTMLParser()
 
 
@@ -138,7 +138,8 @@ class FeedConfig(models.Model):
 
             soup = bs4.BeautifulSoup(entry.content[0].value, 'html.parser')
 
-            images = [image['src'] for image in soup.find_all('img') if image['src'].startswith(self.link)]
+            images = [image['src'] for image in soup.findAll('img', {'src': jpg_png_image}) if
+                      image['src'].startswith(self.link)]
             images = ",".join(images)
 
             feed_entry.feed_config = self
