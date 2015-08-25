@@ -213,6 +213,10 @@ LOGGING = {
             'handlers': ['file_application'],
             'level': 'DEBUG',
         },
+        'requests':{
+            'handlers': ['file_application'],
+            'level': 'WARNING',
+        },
         'django': {
             'handlers': ['file_django', 'mail_admins'],
             'level': 'INFO',
