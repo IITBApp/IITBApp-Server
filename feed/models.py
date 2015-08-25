@@ -62,7 +62,11 @@ class FeedConfig(models.Model):
                 feed=feed, entries=entries, etag=etag
             )
 
-        if status in (200, 302, 304, 307):
+        if status == 304:
+            # Not Modified
+            return None, [], None
+
+        if status in (200, 302, 307):
             # Check for valid feed
             if feed is None:
                 raise FeedError('(Feed Parsed) None Feed for %s' % self.title)
