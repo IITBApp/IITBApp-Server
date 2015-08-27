@@ -2,7 +2,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Prefetch
 
@@ -10,16 +9,12 @@ from models import News, NewsLike, NewsViews
 from serializers import NewsReadSerializer, NewsLikeSerializer, NewsViewSerializer
 from authentication.tokenauth import TokenAuthentication
 from core.permissions import IsCorrectUserId
-
-
-class NewsPagination(LimitOffsetPagination):
-    default_limit = 20
-    max_limit = 50
+from core.pagination import DefaultLimitOffsetPagination
 
 
 class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = News.objects.all().order_by('-id')
-    pagination_class = NewsPagination
+    pagination_class = DefaultLimitOffsetPagination
     serializer_class = NewsReadSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

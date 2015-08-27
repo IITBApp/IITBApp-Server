@@ -1,27 +1,6 @@
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from django.conf import settings
 from django.core.mail.backends.smtp import EmailBackend
 from django.core.mail.utils import DNS_NAME
-
-
-def send_mail(subject, text_msg, from_email, to_email_list):
-
-    server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
-    server.starttls()
-    server.ehlo()
-    server.esmtp_features['auth'] = 'LOGIN PLAIN'
-    server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-
-    mail = MIMEMultipart("alternative")
-    mail['Subject'] = subject
-    mail['From'] = from_email
-    mail.attach(MIMEText(text_msg, 'plain'))
-
-    for to_email in to_email_list:
-        mail['To'] = to_email
-        server.sendmail(from_email, to_email, mail.as_string())
 
 
 class IITBEmailBackend(EmailBackend):

@@ -1,25 +1,20 @@
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Prefetch
 
 from models import Event, EventLike, EventViews
 from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
 from core.permissions import IsCorrectUserId
 from authentication.tokenauth import TokenAuthentication
-from django.db.models import Prefetch
-
-
-class EventPagination(LimitOffsetPagination):
-    default_limit = 20
-    max_limit = 50
+from core.pagination import DefaultLimitOffsetPagination
 
 
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.all().order_by('-id')
-    pagination_class = EventPagination
+    pagination_class = DefaultLimitOffsetPagination
     serializer_class = EventReadSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
