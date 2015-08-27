@@ -40,14 +40,12 @@ class FeedConfigSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'link', 'updated']
 
 
-class FeedEntryLikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FeedEntryLike
+class FeedEntryIdSerializer(serializers.ModelSerializer):
+    entry = serializers.IntegerField(source='id')
 
-
-class FeedEntryViewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FeedEntryView
+        model = FeedEntry
+        fields = ['entry']
 
 
 # TODO: Remove Generic Serializer and FeedLike Serializer
