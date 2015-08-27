@@ -155,12 +155,37 @@ class FeedConfig(models.Model):
             feed_entry.author = entry.author
             feed_entry.images = images
             feed_entry.save()
+            tags = entry.tags
+            for tag in tags:
+                term = tag.get('term', None)
+                label = tag.get('label', None)
+                scheme = tag.get('scheme', None)
+                if term is None:
+                    logger.error("Invalid tag: Term not found. Entry: %s" % feed_entry.title)
+                    continue
+                updated_values = ({'term': term, 'label': label, 'scheme': scheme})
+                feed_category, created = FeedCategory.objects.update_or_create(feed_config=self, term=term,
+                                                                            defaults=updated_values)
+                feed_entry.categories.add(feed_category)
 
     def __unicode__(self):
         if self.title:
             return self.title
         else:
             return ''
+
+
+class FeedCategory(models.Model):
+    term = models.CharField(max_length=128, db_index=True)
+    scheme = models.URLField(null=True, blank=True)
+    label = models.CharField(max_length=128, null=True, blank=True)
+    feed_config = models.ForeignKey(FeedConfig, related_name='categories')
+
+    def __unicode__(self):
+        return self.term
+
+    class Meta:
+        unique_together = ('feed_config', 'term')
 
 
 class FeedEntry(models.Model):
@@ -173,6 +198,7 @@ class FeedEntry(models.Model):
     content = models.TextField()
     author = models.CharField(max_length=64)
     images = models.TextField(null=True, blank=True)
+    categories = models.ManyToManyField(FeedCategory, related_name='entries')
 
     def __unicode__(self):
         return self.title

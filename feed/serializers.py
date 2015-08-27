@@ -1,7 +1,7 @@
 __author__ = 'dheerendra'
 
 from rest_framework import serializers
-from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView, FeedCategory
 
 
 class FeedEntrySerializer(serializers.ModelSerializer):
@@ -10,6 +10,11 @@ class FeedEntrySerializer(serializers.ModelSerializer):
     likes = serializers.IntegerField(source='likes.count')
     views = serializers.IntegerField(source='views.count')
     images = serializers.SerializerMethodField()
+    categories = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='term'
+    )
 
     def get_images(self, obj):
         images = obj.images
@@ -31,13 +36,21 @@ class FeedEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedEntry
         fields = ['id', 'feed_config', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes',
-                  'views', 'images']
+                  'views', 'images', 'categories']
+
+
+class FeedCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedCategory
+        fields = ['id', 'term', 'scheme', 'label']
 
 
 class FeedConfigSerializer(serializers.ModelSerializer):
+    categories = FeedCategorySerializer(many=True, read_only=True)
+
     class Meta:
         model = FeedConfig
-        fields = ['id', 'title', 'link', 'updated']
+        fields = ['id', 'title', 'link', 'updated', 'categories']
 
 
 class FeedEntryLikeSerializer(serializers.ModelSerializer):
