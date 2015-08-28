@@ -5,14 +5,13 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
 from authentication.tokenauth import TokenAuthentication
-from core.permissions import IsCorrectUserId
 from serializers import BugTrackerSerializer
 from models import BugTracker
 
 
 class BugTrackerViewset(viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsCorrectUserId]
+    permission_classes = [IsAuthenticated]
     serializer_class = BugTrackerSerializer
     queryset = BugTracker.objects.all()
 

@@ -1,7 +1,7 @@
 __author__ = 'dheerendra'
 
 from rest_framework import serializers
-from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry
 
 
 class FeedEntrySerializer(serializers.ModelSerializer):
@@ -40,12 +40,8 @@ class FeedConfigSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'link', 'updated']
 
 
-class FeedEntryIdSerializer(serializers.ModelSerializer):
-    entry = serializers.IntegerField(source='id')
-
-    class Meta:
-        model = FeedEntry
-        fields = ['entry']
+class FeedEntryIdSerializer(serializers.Serializer):
+    entry = serializers.PrimaryKeyRelatedField(queryset=FeedEntry.objects.all())
 
 
 # TODO: Remove Generic Serializer and FeedLike Serializer

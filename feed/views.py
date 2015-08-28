@@ -68,38 +68,38 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     @list_route(methods=['POST'])
     def like(self, request):
-        feed_entry_like_serialized = FeedEntryIdSerializer(data=request.DATA)
-        if feed_entry_like_serialized.is_valid():
+        feed_entry_id = FeedEntryIdSerializer(data=request.DATA)
+        if feed_entry_id.is_valid():
             user = request.user
-            entry_id = feed_entry_like_serialized.data['entry']
+            entry_id = feed_entry_id.data['entry']
             FeedEntryLike.objects.get_or_create(entry_id=entry_id, user=user)
             return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
-            return Response(feed_entry_like_serialized.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(feed_entry_id.errors, status=HTTP_400_BAD_REQUEST)
 
     @list_route(methods=['POST'])
     def view(self, request):
-        feed_entry_view_serialized = FeedEntryIdSerializer(data=request.DATA)
-        if feed_entry_view_serialized.is_valid():
+        feed_entry_id = FeedEntryIdSerializer(data=request.DATA)
+        if feed_entry_id.is_valid():
             user = request.user
-            entry_id = feed_entry_view_serialized.data['entry']
+            entry_id = feed_entry_id.data['entry']
             feed_entry_view, created = FeedEntryView.objects.get_or_create(entry_id=entry_id, user=user)
             feed_entry_view.add_view()
             return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
-            return Response(feed_entry_view_serialized.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(feed_entry_id.errors, status=HTTP_400_BAD_REQUEST)
 
     @list_route(methods=['POST'])
     def unlike(self, request):
-        feed_entry_like_serializer = FeedEntryIdSerializer(data=request.DATA)
-        if feed_entry_like_serializer.is_valid():
+        feed_entry_id = FeedEntryIdSerializer(data=request.DATA)
+        if feed_entry_id.is_valid():
             user = request.user
-            entry_id = feed_entry_like_serializer.data['entry']
+            entry_id = feed_entry_id.data['entry']
             FeedEntryLike.objects.all().filter(entry_id=entry_id).filter(user=user).delete()
             FeedEntry.objects.get(pk=entry_id)
             return Response(FeedEntrySerializer(self.get_feed_entry_queryset().get(id=entry_id)).data)
         else:
-            return Response(feed_entry_like_serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(feed_entry_id.errors, status=HTTP_400_BAD_REQUEST)
 
 
 # TODO: Remove this viewset in future

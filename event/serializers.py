@@ -1,7 +1,7 @@
 __author__ = 'dheerenr'
 
 from rest_framework import serializers
-from models import Event, EventLike, EventViews, EventImage
+from models import Event, EventImage
 from authentication.serializers import DesignationReadSerializer
 
 
@@ -37,15 +37,5 @@ class EventReadSerializer(EventWriteSerializer):
             return False
 
 
-class EventLikeSerializer(serializers.ModelSerializer):
-    likes = serializers.IntegerField(source='event.likes.count', read_only=True)
-
-    class Meta:
-        model = EventLike
-
-
-class EventViewSerializer(serializers.ModelSerializer):
-    views = serializers.IntegerField(source='event.views.count', read_only=True)
-
-    class Meta:
-        model = EventViews
+class EventIdSerializer(serializers.Serializer):
+    event = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
