@@ -1,15 +1,16 @@
 from rest_framework import viewsets
-from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
-    FeedEntrySerializer, FeedEntryIdSerializer, FeedEntryLike, FeedEntryView
-from authentication.tokenauth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .models import FeedLike, FeedView, FeedConfig, FeedEntry
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework import filters
 from rest_framework.exceptions import ValidationError
 from django.db.models import Prefetch
+
+from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
+    FeedEntrySerializer, FeedEntryIdSerializer
+from authentication.tokenauth import TokenAuthentication
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
 from core.pagination import DefaultLimitOffsetPagination
 
 
@@ -25,7 +26,6 @@ def get_ids(request):
 
 
 class FeedConfigIdFilter(filters.BaseFilterBackend):
-
     def filter_queryset(self, request, queryset, view):
         ids = get_ids(request)
         if ids:
@@ -34,7 +34,6 @@ class FeedConfigIdFilter(filters.BaseFilterBackend):
 
 
 class FeedEntryByConfigFilter(filters.BaseFilterBackend):
-
     def filter_queryset(self, request, queryset, view):
         ids = get_ids(request)
         if ids:
