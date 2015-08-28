@@ -140,6 +140,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
