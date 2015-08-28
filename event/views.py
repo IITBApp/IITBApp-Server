@@ -31,9 +31,9 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def like(self, request):
         serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            EventLike.objects.get_or_create(event_id=event_id, user=request.user)
-            event = self.get_queryset().filter(id=event_id).first()
+            event = serializer.validated_data['event']
+            EventLike.objects.get_or_create(event=event, user=request.user)
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -42,9 +42,9 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def unlike(self, request):
         serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            EventLike.objects.all().filter(event=event_id).filter(user=request.user).delete()
-            event = self.get_queryset().filter(id=event_id).first()
+            event = serializer.validated_data['event']
+            EventLike.objects.all().filter(event=event).filter(user=request.user).delete()
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -53,10 +53,10 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     def view(self, request):
         serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            event_view, created = EventViews.objects.get_or_create(event_id=event_id, user=request.user)
+            event = serializer.validated_data['event']
+            event_view, created = EventViews.objects.get_or_create(event=event, user=request.user)
             event_view.add_view()
-            event = self.get_queryset().filter(id=event_id).first()
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

@@ -31,9 +31,9 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def like(self, request):
         serializer = NewsIdSerializer(data=request.data)
         if serializer.is_valid():
-            news_id = serializer.data['news']
-            NewsLike.objects.get_or_create(news_id=news_id, user=request.user)
-            news = self.get_queryset().filter(id=news_id).first()
+            news = serializer.validated_data['news']
+            NewsLike.objects.get_or_create(news=news, user=request.user)
+            news = self.get_queryset().filter(pk=news.id).first()
             return Response(NewsReadSerializer(news).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -42,9 +42,9 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def unlike(self, request):
         serializer = NewsIdSerializer(data=request.data)
         if serializer.is_valid():
-            news_id = serializer.data['news']
-            NewsLike.objects.all().filter(news=news_id).filter(user=request.user).delete()
-            news = self.get_queryset().filter(id=news_id).first()
+            news = serializer.validated_data['news']
+            NewsLike.objects.all().filter(news=news).filter(user=request.user).delete()
+            news = self.get_queryset().filter(pk=news.id).first()
             return Response(NewsReadSerializer(news).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -53,10 +53,10 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     def view(self, request):
         serializer = NewsIdSerializer(data=request.data)
         if serializer.is_valid():
-            news_id = serializer.data['news']
-            news_view, created = NewsViews.objects.get_or_create(news_id=news_id, user=request.user)
+            news = serializer.validated_data['news']
+            news_view, created = NewsViews.objects.get_or_create(news=news, user=request.user)
             news_view.add_view()
-            news = self.get_queryset().filter(id=news_id).first()
+            news = self.get_queryset().filter(pk=news.id).first()
             return Response(NewsReadSerializer(news).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

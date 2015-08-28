@@ -16,31 +16,32 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
-from authentication import urls as authentication_urls
-from news import urls as news_urls
-from event import urls as event_urls
-from notice import urls as notice_urls
-from information import urls as information_urls
-from content import urls as content_urls
-from gcm import urls as gcm_urls
-import core.urls as core_urls
-import feed.urls as feed_urls
+import gcm.urls
+
+import authentication.urls
+import news.urls
+import event.urls
+import notice.urls
+import information.urls
+import content.urls
+import core.urls
+import feed.urls
 import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^public/', include(information_urls)),
-    url(r'^content/', include(content_urls)),
+    url(r'^public/', include(information.urls)),
+    url(r'^content/', include(content.urls)),
     url(r'^logs/', views.logs),
     url(r'^$', views.index, name='index_page'),
     url(r'^about/', views.about, name='about_page'),
-    url(r'', include(authentication_urls)),
-    url(r'', include(news_urls)),
-    url(r'', include(event_urls)),
-    url(r'', include(notice_urls)),
-    url(r'', include(gcm_urls)),
-    url(r'', include(core_urls)),
-    url(r'', include(feed_urls)),
+    url(r'', include(authentication.urls)),
+    url(r'', include(news.urls)),
+    url(r'', include(event.urls)),
+    url(r'', include(notice.urls)),
+    url(r'', include(gcm.urls)),
+    url(r'', include(core.urls)),
+    url(r'', include(feed.urls)),
 ]
 
 urlpatterns += [
