@@ -142,6 +142,10 @@ STATICFILES_FINDERS = (
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
+FILE_UPLOAD_PERMISSION = 0o755
+
+FILE_UPLOAD_DIRECTORY_PERMISSION = 0o755
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
