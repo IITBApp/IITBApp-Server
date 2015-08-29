@@ -26,6 +26,7 @@ import information.urls
 import content.urls
 import core.urls
 import feed.urls
+import pns.urls
 import views
 
 urlpatterns = [
@@ -42,6 +43,7 @@ urlpatterns = [
     url(r'', include(gcm.urls)),
     url(r'', include(core.urls)),
     url(r'', include(feed.urls)),
+    url(r'', include(pns.urls)),
 ]
 
 urlpatterns += [

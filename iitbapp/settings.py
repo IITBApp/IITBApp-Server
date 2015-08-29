@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'content',
     'core',
     'feed',
+    'pns',
 )
 
 MIDDLEWARE_CLASSES = (
