@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'content',
     'core',
     'feed',
+    'pns',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -139,6 +140,12 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+
+FILE_UPLOAD_PERMISSIONS = 0o755
+
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o755
 
 
 # Internationalization

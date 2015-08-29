@@ -1,7 +1,7 @@
 __author__ = 'dheerendra'
 
 from rest_framework import serializers
-from models import News, NewsImage, NewsLike, NewsViews
+from models import News, NewsImage
 from authentication.serializers import DesignationReadSerializer
 
 
@@ -37,15 +37,5 @@ class NewsReadSerializer(NewsWriteSerializer):
             return False
 
 
-class NewsLikeSerializer(serializers.ModelSerializer):
-    likes = serializers.IntegerField(source='news.likes.count', read_only=True)
-
-    class Meta:
-        model = NewsLike
-
-
-class NewsViewSerializer(serializers.ModelSerializer):
-    views = serializers.IntegerField(source='news.views.count', read_only=True)
-
-    class Meta:
-        model = NewsViews
+class NewsIdSerializer(serializers.Serializer):
+    news = serializers.PrimaryKeyRelatedField(queryset=News.objects.all())

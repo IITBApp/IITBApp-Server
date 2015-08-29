@@ -12,7 +12,6 @@ from serializers import UserSerializer
 from models import UserToken
 from authentication.forms import LogoutForm
 from tokenauth import TokenAuthentication
-from core.permissions import IsCorrectUserId
 
 
 def authenticate_ldap(username, password, token):
@@ -88,12 +87,11 @@ class UserViewset(viewsets.ReadOnlyModelViewSet):
         return HttpResponse(json_data, content_type="application/json")
 
     @list_route(methods=['POST'], authentication_classes=[TokenAuthentication],
-                permission_classes=[IsAuthenticated, IsCorrectUserId])
+                permission_classes=[IsAuthenticated])
     def logout(self, request):
         logout_form = LogoutForm(data=request.DATA)
         if logout_form.is_valid():
-            user = logout_form.cleaned_data['user']
-            self.check_object_permissions(request, user)
+            user = request.user
             logout_all = logout_form.cleaned_data['logout_all']
             token = request.META.get('HTTP_TOKEN_AUTH')
             if logout_all:

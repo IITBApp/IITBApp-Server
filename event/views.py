@@ -6,8 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Prefetch
 
 from models import Event, EventLike, EventViews
-from serializers import EventReadSerializer, EventLikeSerializer, EventViewSerializer
-from core.permissions import IsCorrectUserId
+from serializers import EventReadSerializer, EventIdSerializer
 from authentication.tokenauth import TokenAuthentication
 from core.pagination import DefaultLimitOffsetPagination
 
@@ -20,50 +19,44 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        request = self.request
+        user = self.request.user
         queryset = Event.objects.all().order_by('-id').prefetch_related(
-            Prefetch('likes', EventLike.objects.all().filter(user=request.user), 'liked')
+            Prefetch('likes', EventLike.objects.all().filter(user=user), 'liked')
         ).prefetch_related(
-            Prefetch('views', EventViews.objects.all().filter(user=request.user), 'viewed')
+            Prefetch('views', EventViews.objects.all().filter(user=user), 'viewed')
         )
         return queryset
 
-    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
+    @list_route(methods=['POST'])
     def like(self, request):
-        serializer = EventLikeSerializer(data=request.data)
+        serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            user_id = serializer.data['user']
-            self.check_object_permissions(request, user_id)
-            EventLike.objects.get_or_create(event_id=event_id, user_id=user_id)
-            event = self.get_queryset().filter(id=event_id).first()
+            event = serializer.validated_data['event']
+            EventLike.objects.get_or_create(event=event, user=request.user)
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
+    @list_route(methods=['POST'])
     def unlike(self, request):
-        serializer = EventLikeSerializer(data=request.data)
+        serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            user_id = serializer.data['user']
-            self.check_object_permissions(request, user_id)
-            EventLike.objects.all().filter(event=event_id).filter(user=user_id).delete()
-            event = self.get_queryset().filter(id=event_id).first()
+            event = serializer.validated_data['event']
+            EventLike.objects.all().filter(event=event).filter(user=request.user).delete()
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @list_route(methods=['POST'], permission_classes=[IsCorrectUserId])
+    @list_route(methods=['POST'])
     def view(self, request):
-        serializer = EventViewSerializer(data=request.data)
+        serializer = EventIdSerializer(data=request.data)
         if serializer.is_valid():
-            event_id = serializer.data['event']
-            user_id = serializer.data['user']
-            self.check_object_permissions(request, user_id)
-            event_view, created = EventViews.objects.get_or_create(event_id=event_id, user_id=user_id)
+            event = serializer.validated_data['event']
+            event_view, created = EventViews.objects.get_or_create(event=event, user=request.user)
             event_view.add_view()
-            event = self.get_queryset().filter(id=event_id).first()
+            event = self.get_queryset().filter(pk=event.id).first()
             return Response(EventReadSerializer(event).data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
