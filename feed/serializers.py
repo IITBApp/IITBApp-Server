@@ -45,6 +45,12 @@ class FeedCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'term', 'scheme', 'label']
 
 
+class FeedCategorySubscriptionSerializer(serializers.Serializer):
+    categories = serializers.ListField(
+        child=serializers.PrimaryKeyRelatedField(queryset=FeedCategory.objects.all())
+    )
+
+
 class FeedConfigSerializer(serializers.ModelSerializer):
     categories = FeedCategorySerializer(many=True, read_only=True)
 

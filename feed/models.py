@@ -180,6 +180,7 @@ class FeedCategory(models.Model):
     scheme = models.URLField(null=True, blank=True)
     label = models.CharField(max_length=128, null=True, blank=True)
     feed_config = models.ForeignKey(FeedConfig, related_name='categories')
+    subscribers = models.ManyToManyField(User, related_name='feed_subscriptions')
 
     def __unicode__(self):
         return self.term

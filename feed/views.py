@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Prefetch
 
 from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
-    FeedEntrySerializer, FeedEntryIdSerializer
+    FeedEntrySerializer, FeedEntryIdSerializer, FeedCategorySerializer, FeedCategorySubscriptionSerializer
 from authentication.tokenauth import TokenAuthentication
 from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
 from core.pagination import DefaultLimitOffsetPagination
@@ -97,9 +97,35 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
         else:
             return Response(serialized.errors, status=HTTP_400_BAD_REQUEST)
 
+    @list_route(methods=['GET'])
+    def subscriptions(self, request):
+        queryset = request.user.feed_subscriptions.all()
+        categories = self.paginate_queryset(queryset)
+        serialized_categories = FeedCategorySerializer(categories, many=True).data
+        return self.get_paginated_response(serialized_categories)
+
+    @list_route(methods=['POST'])
+    def subscribe(self, request):
+        '''
+        Take a list of category ids, delete all old subscriptions, resubscribe again.
+        :param request:
+        :return:
+        '''
+        feed_category_subscription_serialiazed = FeedCategorySubscriptionSerializer(data=request.DATA)
+        if feed_category_subscription_serialiazed.is_valid():
+            categories = feed_category_subscription_serialiazed.validated_data['categories']
+            request.user.feed_subscriptions.clear()
+            request.user.feed_subscriptions.add(*categories)
+            categories = self.paginate_queryset(categories)
+            serialized_categories = FeedCategorySerializer(categories, many=True).data
+            return self.get_paginated_response(serialized_categories)
+
 
 # TODO: Remove this viewset in future
 class FeedViewset(viewsets.GenericViewSet):
+    """
+    Endpoints for v8 users only
+    """
     serializer_class = FeedGenericSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
