@@ -119,6 +119,8 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             categories = self.paginate_queryset(categories)
             serialized_categories = FeedCategorySerializer(categories, many=True).data
             return self.get_paginated_response(serialized_categories)
+        else:
+            return Response(feed_category_subscription_serialiazed.errors, status=HTTP_400_BAD_REQUEST)
 
 
 # TODO: Remove this viewset in future

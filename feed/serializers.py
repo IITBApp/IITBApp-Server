@@ -42,7 +42,7 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 class FeedCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedCategory
-        fields = ['id', 'term', 'scheme', 'label']
+        fields = ['id', 'term', 'scheme', 'label', 'feed_config']
 
 
 class FeedCategorySubscriptionSerializer(serializers.Serializer):

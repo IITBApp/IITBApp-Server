@@ -1,15 +1,18 @@
-from django.db import models
-from django.contrib.auth.models import User
-import feedparser
 import urllib2
 import logging
-from django.utils import timezone
-from django.utils.timezone import utc
 from datetime import timedelta, datetime
 import time
 import re
 import HTMLParser
+
+from django.db import models
+from django.contrib.auth.models import User
+import feedparser
+from django.utils import timezone
+from django.utils.timezone import utc
 import bs4
+
+from signals import feed_entry_registered
 
 logger = logging.getLogger(__name__)
 non_image_html = re.compile(r'<img.*?/>')
@@ -132,6 +135,7 @@ class FeedConfig(models.Model):
 
         for entry in entries:
             entry_id = entry.id
+            created = False
             try:
                 feed_entry = FeedEntry.objects.get(entry_id=entry_id)
                 entry_updated = datetime.fromtimestamp(time.mktime(entry.updated_parsed)).replace(tzinfo=utc)
@@ -139,6 +143,7 @@ class FeedConfig(models.Model):
                     continue
             except FeedEntry.DoesNotExist:
                 feed_entry = FeedEntry(entry_id=entry_id)
+                created = True
 
             soup = bs4.BeautifulSoup(entry.content[0].value, 'html.parser')
 
@@ -165,8 +170,13 @@ class FeedConfig(models.Model):
                     continue
                 updated_values = ({'term': term, 'label': label, 'scheme': scheme})
                 feed_category, created = FeedCategory.objects.update_or_create(feed_config=self, term=term,
-                                                                            defaults=updated_values)
+                                                                               defaults=updated_values)
+                if created:
+                    all_users = User.objects.all()
+                    feed_category.subscribers.add(*all_users)
                 feed_entry.categories.add(feed_category)
+
+            feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
 
     def __unicode__(self):
         if self.title:
