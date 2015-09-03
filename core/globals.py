@@ -20,9 +20,11 @@ datetime_input_formats = [
      '%d-%m-%Y %H:%M',
 ]
 
+
 def send_android_push_notification(message):
     DeviceOld = get_device_model()
     DeviceOld.objects.all().filter(is_active=True).send_message(message)
+
 
 def verify_image(image):
     try:

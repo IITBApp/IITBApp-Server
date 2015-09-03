@@ -106,11 +106,11 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     @list_route(methods=['POST'])
     def subscribe(self, request):
-        '''
+        """
         Take a list of category ids, delete all old subscriptions, resubscribe again.
         :param request:
         :return:
-        '''
+        """
         feed_category_subscription_serialiazed = FeedCategorySubscriptionSerializer(data=request.DATA)
         if feed_category_subscription_serialiazed.is_valid():
             categories = feed_category_subscription_serialiazed.validated_data['categories']

@@ -10,6 +10,3 @@ class DeviceSerializer(serializers.ModelSerializer):
         model = Device
         read_only_fields = ['user', 'creation_date', 'last_modified', 'is_active']
 
-
-class DeviceIdSerializer(serializers.Serializer):
-    dev_id = serializers.PrimaryKeyRelatedField(queryset=Device.objects.all())

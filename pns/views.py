@@ -1,11 +1,12 @@
 from rest_framework import viewsets
-from authentication.tokenauth import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .models import Device
-from .serializers import DeviceSerializer, DeviceIdSerializer
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
+
+from authentication.tokenauth import TokenAuthentication
+from .models import Device
+from .serializers import DeviceSerializer
 from core.permissions import UserIsForeignKey
 from .forms import DeviceRegistrationForm, DeviceDeregistrationForm
 
@@ -23,7 +24,7 @@ class PNSViewset(viewsets.GenericViewSet):
             dev_id = registration_form.cleaned_data['dev_id']
             reg_id = registration_form.cleaned_data['reg_id']
             device, created = Device.objects.update_or_create(dev_id=dev_id, user=request.user,
-                                                           defaults={'reg_id': reg_id, 'is_active': True})
+                                                              defaults={'reg_id': reg_id, 'is_active': True})
             return Response(self.serializer_class(device).data)
         else:
             return Response(registration_form.errors, status=HTTP_400_BAD_REQUEST)
@@ -40,4 +41,3 @@ class PNSViewset(viewsets.GenericViewSet):
             return Response(self.serializer_class(device).data)
         else:
             return Response(deregistration_form.errors, status=HTTP_400_BAD_REQUEST)
-

@@ -8,6 +8,7 @@ import django.dispatch
 from serializers import NewsReadSerializer
 from models import News
 from core.globals import send_android_push_notification
+from pns import pns
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ def send_news_push_notification(sender, instance, created, **kwargs):
     message = create_message(instance, created)
     send_android_push_notification(message)
     logger.info("Android push sent for news with id %d with message %s", instance.id, message)
+    pns.send_pns(message)
+    logger.info("Android push sent for news with id %d with message %s to new devices", instance.id, message)
 
 
 news_done = django.dispatch.Signal(providing_args=['instance', 'created'])
