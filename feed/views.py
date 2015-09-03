@@ -7,6 +7,7 @@ from rest_framework import filters
 from rest_framework.exceptions import ValidationError
 from django.db.models import Prefetch
 from django.contrib.auth.models import User
+from pns.models import Device
 
 from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
     FeedEntrySerializer, FeedEntryIdSerializer, FeedCategorySerializer, FeedCategorySubscriptionSerializer
@@ -68,7 +69,14 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     @list_route(methods=['GET'])
     def entries(self, request):
+        user = self.request.user
         feed_entries = FeedEntryByConfigFilter().filter_queryset(request, self.get_feed_entry_queryset(), self)
+        if Device.objects.all().filter(user=user).exists():
+            """
+            User has registered device in new Device model. Filter entries by subscribed categories now
+            Important for maintaining backward compatibility!
+            """
+            feed_entries = feed_entries.filter(categories__in=user.feed_subscriptions.all())
         feed_entries = self.paginate_queryset(feed_entries)
         serialized_entries = FeedEntrySerializer(feed_entries, many=True).data
         return self.get_paginated_response(serialized_entries)

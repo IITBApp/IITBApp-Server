@@ -161,6 +161,7 @@ class FeedConfig(models.Model):
             feed_entry.images = images
             feed_entry.save()
             tags = entry.tags
+            categories = []
             for tag in tags:
                 term = tag.get('term', None)
                 label = tag.get('label', None)
@@ -174,7 +175,12 @@ class FeedConfig(models.Model):
                 if created:
                     all_users = User.objects.all()
                     feed_category.subscribers.add(*all_users)
-                feed_entry.categories.add(feed_category)
+                categories.append(feed_category)
+
+            if not categories:
+                # Adding None category if there is no category in feed entry
+                categories.append(FeedCategory.objects.get(term='None', feed_config=self))
+            feed_entry.categories.add(*categories)
 
             feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
 

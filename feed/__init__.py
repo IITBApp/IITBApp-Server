@@ -6,6 +6,6 @@ class FeedAppConfig(AppConfig):
     name = 'feed'
 
     def ready(self):
-        import feed.feed_pns
+        import feed.signals_receivers
 
 default_app_config = 'feed.FeedAppConfig'
