@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView
+from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedEntryLike, FeedEntryView, FeedCategory
 from django import forms
 from django.db.models import Count
 from django.core.management import call_command
@@ -58,11 +58,16 @@ class FeedEntryAdmin(admin.ModelAdmin):
         return ins.views.count()
 
 
+class FeedCategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'term', 'feed_config']
+
+
 class FeedAdmin(admin.ModelAdmin):
     list_display = ['guid', 'user']
 
 
 admin.site.register(FeedConfig, FeedConfigAdmin)
 admin.site.register(FeedEntry, FeedEntryAdmin)
+admin.site.register(FeedCategory, FeedCategoryAdmin)
 admin.site.register(FeedLike, FeedAdmin)
 admin.site.register(FeedView, FeedAdmin)
