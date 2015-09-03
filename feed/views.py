@@ -6,6 +6,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework import filters
 from rest_framework.exceptions import ValidationError
 from django.db.models import Prefetch
+from django.contrib.auth.models import User
 
 from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
     FeedEntrySerializer, FeedEntryIdSerializer, FeedCategorySerializer, FeedCategorySubscriptionSerializer
@@ -48,6 +49,13 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     queryset = FeedConfig.objects.all().order_by('-id')
     pagination_class = DefaultLimitOffsetPagination
     filter_backends = [FeedConfigIdFilter]
+
+    def get_queryset(self):
+        user = self.request.user
+        feed_configs = FeedConfig.objects.all().order_by('-id').prefetch_related(
+            Prefetch('categories__subscribers', User.objects.all().filter(pk=user.id))
+        )
+        return feed_configs
 
     def get_feed_entry_queryset(self):
         user = self.request.user

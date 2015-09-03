@@ -40,15 +40,15 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 
 
 class FeedCategorySerializer(serializers.ModelSerializer):
+    subscribed = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_subscribed(obj):
+        return obj.subscribers.all().exists()
+
     class Meta:
         model = FeedCategory
-        fields = ['id', 'term', 'scheme', 'label', 'feed_config']
-
-
-class FeedCategorySubscriptionSerializer(serializers.Serializer):
-    categories = serializers.ListField(
-        child=serializers.PrimaryKeyRelatedField(queryset=FeedCategory.objects.all())
-    )
+        fields = ['id', 'term', 'scheme', 'label', 'feed_config', 'subscribed']
 
 
 class FeedConfigSerializer(serializers.ModelSerializer):
@@ -57,6 +57,12 @@ class FeedConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedConfig
         fields = ['id', 'title', 'link', 'updated', 'categories']
+
+
+class FeedCategorySubscriptionSerializer(serializers.Serializer):
+    categories = serializers.ListField(
+        child=serializers.PrimaryKeyRelatedField(queryset=FeedCategory.objects.all())
+    )
 
 
 class FeedEntryIdSerializer(serializers.Serializer):
