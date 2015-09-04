@@ -124,14 +124,19 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
     def subscribe(self, request):
         """
         Take a list of category ids, delete all old subscriptions, resubscribe again.
-        :param request:
-        :return:
         """
+        user = request.user
         feed_category_subscription_serialiazed = FeedCategorySubscriptionSerializer(data=request.DATA)
         if feed_category_subscription_serialiazed.is_valid():
             categories = feed_category_subscription_serialiazed.validated_data['categories']
-            request.user.feed_subscriptions.clear()
-            request.user.feed_subscriptions.add(*categories)
+            categories_set = set(categories)
+            old_categories = user.feed_subscriptions.all()
+            categories_to_add = categories_set - old_categories
+            categories_to_remove = old_categories - categories_set
+            if categories_to_add:
+                user.feed_subscriptions.add(*categories_to_add)
+            if categories_to_remove:
+                user.feed_subscriptions.remove(*categories_to_remove)
             categories = self.paginate_queryset(categories)
             serialized_categories = FeedCategorySerializer(categories, many=True).data
             return self.get_paginated_response(serialized_categories)

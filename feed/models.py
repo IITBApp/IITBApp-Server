@@ -91,26 +91,87 @@ class FeedConfig(models.Model):
         # Unknown status
         raise FeedError('Unrecognised HTTP status %s' % status)
 
-    def check_feeds(self, force=False):
+    def _process_tags(self, tags, feed_entry):
+        categories = set()
+        for tag in tags:
+            term = tag.get('term', None)
+            label = tag.get('label', None)
+            scheme = tag.get('scheme', None)
+            if term is None:
+                logger.error("Invalid tag: Term not found. Entry: %s" % feed_entry.title)
+                continue
+            updated_values = ({'term': term, 'label': label, 'scheme': scheme})
+            feed_category, created = FeedCategory.objects.update_or_create(feed_config=self, term=term,
+                                                                           defaults=updated_values)
+            if created:
+                all_users = User.objects.all()
+                feed_category.subscribers.add(*all_users)
+            categories.add(feed_category)
 
+        if not categories:
+            # Adding None category if there is no category in feed entry
+            categories.add(FeedCategory.objects.get(term='None', feed_config=self))
+        old_categories = feed_entry.categories.all()
+        categories_to_add = categories - old_categories
+        # New categories to add. Important in case of feed entry is updated
+        categories_to_remove = old_categories - categories
+        # Old categories which have to be removed. Important in case of feed entry is updated
+        if categories_to_add:
+            feed_entry.categories.add(*categories_to_add)
+        if categories_to_remove:
+            feed_entry.categories.remove(*categories_to_remove)
+        feed_entry.categories.add(*categories)
+
+    def _process_feed_entries(self, raw_feed_entries):
+        for raw_feed_entry in raw_feed_entries:
+            raw_feed_entry_id = raw_feed_entry.id
+            created = False
+            try:
+                feed_entry = FeedEntry.objects.get(entry_id=raw_feed_entry_id)
+                entry_updated = datetime.fromtimestamp(time.mktime(raw_feed_entry.updated_parsed)).replace(tzinfo=utc)
+                if feed_entry.updated == entry_updated:
+                    continue
+            except FeedEntry.DoesNotExist:
+                feed_entry = FeedEntry(entry_id=raw_feed_entry_id)
+                created = True
+
+            soup = bs4.BeautifulSoup(raw_feed_entry.content[0].value, 'html.parser')
+
+            images = [image['src'] for image in soup.findAll('img', {'src': jpg_png_image}) if
+                      image['src'].startswith(self.link)]
+            images = ",".join(images)
+
+            feed_entry.feed_config = self
+            feed_entry.title = parser.unescape(raw_feed_entry.title)
+            feed_entry.link = raw_feed_entry.link
+            feed_entry.updated = raw_feed_entry.updated
+            feed_entry.published = raw_feed_entry.published
+            feed_entry.content = non_image_html.sub('', raw_feed_entry.content[0].value)
+            feed_entry.author = raw_feed_entry.author
+            feed_entry.images = images
+            feed_entry.save()
+            self._process_tags(raw_feed_entry.tags, feed_entry)
+            feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
+
+    def check_feeds(self, force=False):
         next_schedule = self.last_checked + timedelta(minutes=self.check_frequency)
         now = timezone.now()
         if not force and next_schedule > now:
             return
 
         try:
-            feed, entries, etag = self._fetch_feed()
+            feed, raw_feed_entries, etag = self._fetch_feed()
         except FeedError as e:
             logger.error("Error: %s" % e)
             feed = e.feed
-            entries = e.entries
+            raw_feed_entries = e.entries
             etag = e.etag
 
         self.last_checked = now
         self.save()
         self.refresh_from_db()
 
-        if feed is None:
+        if not feed:
             return
 
         logger.info("Feeds fetched")
@@ -128,61 +189,9 @@ class FeedConfig(models.Model):
         self.updated = updated
         self.title = feed.get('title', self.title)
         self.link = feed.get('link', self.link)
-
         self.save()
-
         self.refresh_from_db()
-
-        for entry in entries:
-            entry_id = entry.id
-            created = False
-            try:
-                feed_entry = FeedEntry.objects.get(entry_id=entry_id)
-                entry_updated = datetime.fromtimestamp(time.mktime(entry.updated_parsed)).replace(tzinfo=utc)
-                if feed_entry.updated == entry_updated:
-                    continue
-            except FeedEntry.DoesNotExist:
-                feed_entry = FeedEntry(entry_id=entry_id)
-                created = True
-
-            soup = bs4.BeautifulSoup(entry.content[0].value, 'html.parser')
-
-            images = [image['src'] for image in soup.findAll('img', {'src': jpg_png_image}) if
-                      image['src'].startswith(self.link)]
-            images = ",".join(images)
-
-            feed_entry.feed_config = self
-            feed_entry.title = parser.unescape(entry.title)
-            feed_entry.link = entry.link
-            feed_entry.updated = entry.updated
-            feed_entry.published = entry.published
-            feed_entry.content = non_image_html.sub('', entry.content[0].value)
-            feed_entry.author = entry.author
-            feed_entry.images = images
-            feed_entry.save()
-            tags = entry.tags
-            categories = []
-            for tag in tags:
-                term = tag.get('term', None)
-                label = tag.get('label', None)
-                scheme = tag.get('scheme', None)
-                if term is None:
-                    logger.error("Invalid tag: Term not found. Entry: %s" % feed_entry.title)
-                    continue
-                updated_values = ({'term': term, 'label': label, 'scheme': scheme})
-                feed_category, created = FeedCategory.objects.update_or_create(feed_config=self, term=term,
-                                                                               defaults=updated_values)
-                if created:
-                    all_users = User.objects.all()
-                    feed_category.subscribers.add(*all_users)
-                categories.append(feed_category)
-
-            if not categories:
-                # Adding None category if there is no category in feed entry
-                categories.append(FeedCategory.objects.get(term='None', feed_config=self))
-            feed_entry.categories.add(*categories)
-
-            feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
+        self._process_feed_entries(raw_feed_entries)
 
     def __unicode__(self):
         if self.title:
