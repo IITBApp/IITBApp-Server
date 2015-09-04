@@ -123,6 +123,7 @@ class FeedConfig(models.Model):
         feed_entry.categories.add(*categories)
 
     def _process_feed_entries(self, raw_feed_entries):
+        logger.info("Raw feed entries processing started for feed %d" % self.id)
         for raw_feed_entry in raw_feed_entries:
             raw_feed_entry_id = raw_feed_entry.id
             created = False
@@ -152,6 +153,7 @@ class FeedConfig(models.Model):
             feed_entry.save()
             self._process_tags(raw_feed_entry.tags, feed_entry)
             feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
+        logger.info("Raw feed entries processing finished for feed %d" % self.id)
 
     def check_feeds(self, force=False):
         next_schedule = self.last_checked + timedelta(minutes=self.check_frequency)
