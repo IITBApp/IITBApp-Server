@@ -111,7 +111,7 @@ class FeedConfig(models.Model):
         if not categories:
             # Adding None category if there is no category in feed entry
             categories.add(FeedCategory.objects.get(term='None', feed_config=self))
-        old_categories = feed_entry.categories.all()
+        old_categories = set(feed_entry.categories.all())
         categories_to_add = categories - old_categories
         # New categories to add. Important in case of feed entry is updated
         categories_to_remove = old_categories - categories
