@@ -130,7 +130,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
         if feed_category_subscription_serialiazed.is_valid():
             categories = feed_category_subscription_serialiazed.validated_data['categories']
             categories_set = set(categories)
-            old_categories = user.feed_subscriptions.all()
+            old_categories = set(user.feed_subscriptions.all())
             categories_to_add = categories_set - old_categories
             categories_to_remove = old_categories - categories_set
             if categories_to_add:
