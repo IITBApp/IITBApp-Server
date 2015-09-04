@@ -42,7 +42,7 @@ def send_feed_to_pns(sender, instance, created, **kwargs):
 
 def create_default_feed_category(sender, instance, created, **kwargs):
     if created:
-        feed_category = FeedCategory(term='None', feed_config=instance)
+        feed_category = FeedCategory(term='Uncategorized', feed_config=instance)
         feed_category.save()
         all_users = User.objects.all()
         feed_category.subscribers.add(*all_users)
@@ -50,3 +50,4 @@ def create_default_feed_category(sender, instance, created, **kwargs):
 
 signals.post_save.connect(send_feed_push_notification, FeedEntry)
 feed_entry_registered.connect(send_feed_to_pns, FeedEntry)
+signals.post_save.connect(create_default_feed_category, FeedConfig)
