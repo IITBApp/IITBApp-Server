@@ -1,5 +1,3 @@
-__author__ = 'dheerendra'
-
 from models import Device
 from django.contrib.auth.models import User
 import logging

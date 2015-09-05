@@ -37,6 +37,16 @@ class FeedError(Exception):
 
 
 class FeedConfig(models.Model):
+    """
+    Represents an atom feed channel
+    url -- URL with authentication credentials ex http://username:password@example.com
+    etag -- Etag of feed channel useful for caching (https://en.wikipedia.org/wiki/HTTP_ETag)
+    updated -- Last updated datetime
+    title -- Title of the feed channel
+    link -- Link to web page of the channel
+    check_frequencey -- Time in minutes after feeds should be checked
+    last_checked -- Time when channel was checked for the feeds
+    """
     url = models.URLField(unique=True)
     etag = models.CharField(max_length=128, null=True, blank=True, default=None)
     updated = models.DateTimeField(blank=True, null=True)
@@ -46,6 +56,10 @@ class FeedConfig(models.Model):
     last_checked = models.DateTimeField(null=True, blank=True, default=datetime.fromtimestamp(0).replace(tzinfo=utc))
 
     def _fetch_feed(self):
+        """
+        Fetch feeds from source using etag. Verify status and content.
+        :return: feed, entries, etag
+        """
         data = feedparser.parse(self.url, etag=self.etag)
         status = data.get('status', 200)
         feed = data.get('feed', None)
@@ -92,6 +106,11 @@ class FeedConfig(models.Model):
         raise FeedError('Unrecognised HTTP status %s' % status)
 
     def _process_tags(self, tags, feed_entry):
+        """
+        Add or remove categories (tags) from a specific feed_entry.
+        :param tags: List of tags present in atom xml
+        :param feed_entry: FeedEntry object
+        """
         categories = set()
         for tag in tags:
             term = tag.get('term', None)
@@ -104,13 +123,14 @@ class FeedConfig(models.Model):
             feed_category, created = FeedCategory.objects.update_or_create(feed_config=self, term=term,
                                                                            defaults=updated_values)
             if created:
+                """If tag is added for the first time in database, all users should be subscribed by default"""
                 all_users = User.objects.all()
                 feed_category.subscribers.add(*all_users)
             categories.add(feed_category)
 
         if not categories:
-            # Adding None category if there is no category in feed entry
-            categories.add(FeedCategory.objects.get(term='None', feed_config=self))
+            """If no tags are present in xml, add 'Uncategorized' by default"""
+            categories.add(FeedCategory.objects.get(term='Uncategorized', feed_config=self))
         old_categories = set(feed_entry.categories.all())
         categories_to_add = categories - old_categories
         # New categories to add. Important in case of feed entry is updated
@@ -123,14 +143,20 @@ class FeedConfig(models.Model):
         feed_entry.categories.add(*categories)
 
     def _process_feed_entries(self, raw_feed_entries):
-        logger.info("Raw feed entries processing started for feed %d" % self.id)
+        """
+        Process raw feed entries obtained from atom xml to FeedEntry class instance and save them in database
+        :param raw_feed_entries: feed entries from atom xml
+        """
+        logger.info("Raw feed entries processing started for feed %d", self.id)
         for raw_feed_entry in raw_feed_entries:
             raw_feed_entry_id = raw_feed_entry.id
             created = False
             try:
                 feed_entry = FeedEntry.objects.get(entry_id=raw_feed_entry_id)
+                # Check if entry is already present in database
                 entry_updated = datetime.fromtimestamp(time.mktime(raw_feed_entry.updated_parsed)).replace(tzinfo=utc)
                 if feed_entry.updated == entry_updated:
+                    # If entry is not updated then skip
                     continue
             except FeedEntry.DoesNotExist:
                 feed_entry = FeedEntry(entry_id=raw_feed_entry_id)
@@ -141,6 +167,7 @@ class FeedConfig(models.Model):
             images = [image['src'] for image in soup.findAll('img', {'src': jpg_png_image}) if
                       image['src'].startswith(self.link)]
             images = ",".join(images)
+            # Save images urls into database as string.
 
             feed_entry.feed_config = self
             feed_entry.title = parser.unescape(raw_feed_entry.title)
@@ -153,9 +180,15 @@ class FeedConfig(models.Model):
             feed_entry.save()
             self._process_tags(raw_feed_entry.tags, feed_entry)
             feed_entry_registered.send(sender=FeedEntry, instance=feed_entry, created=created)
-        logger.info("Raw feed entries processing finished for feed %d" % self.id)
+            # Trigger feed_entry_registered signal which is later used for sending push notification to subscribed users
+        logger.info("Raw feed entries processing finished for feed %d", self.id)
 
     def check_feeds(self, force=False):
+        """
+        Check feeds from source. Called by cron job to check feeds.
+        :param force: If true, then check feeds even it is not scheduled for now
+        :return:
+        """
         next_schedule = self.last_checked + timedelta(minutes=self.check_frequency)
         now = timezone.now()
         if not force and next_schedule > now:
@@ -176,7 +209,7 @@ class FeedConfig(models.Model):
         if not feed:
             return
 
-        logger.info("Feeds fetched")
+        logger.info("Feeds fetched for %s", self.title)
 
         updated = feed.get(
             'updated_parsed',
@@ -194,6 +227,7 @@ class FeedConfig(models.Model):
         self.save()
         self.refresh_from_db()
         self._process_feed_entries(raw_feed_entries)
+        logger.info("Feed processed for %s", self.title)
 
     def __unicode__(self):
         if self.title:
@@ -203,6 +237,12 @@ class FeedConfig(models.Model):
 
 
 class FeedCategory(models.Model):
+    """
+    Represents a feed category (tag).
+    term, scheme, label are the attributes of an atom feed tag. see https://tools.ietf.org/html/rfc4287#page-18
+    feed_config -- Foreign Key to FeedConfig class
+    subscribers -- ManyToMany Relation with the Users (list of users who have subscribed to this category)
+    """
     term = models.CharField(max_length=128, db_index=True)
     scheme = models.URLField(null=True, blank=True)
     label = models.CharField(max_length=128, null=True, blank=True)
@@ -217,6 +257,10 @@ class FeedCategory(models.Model):
 
 
 class FeedEntry(models.Model):
+    """
+    entry_id -- id present in the atom feed xml ex: http://placements.iitb.ac.in/blog/?p=651
+    link -- Link to web page of the feed (alternate link in atom feed xml)
+    """
     entry_id = models.CharField(max_length=200, db_index=True)
     feed_config = models.ForeignKey(FeedConfig, related_name='entries')
     title = models.CharField(max_length=128)

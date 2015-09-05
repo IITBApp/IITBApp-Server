@@ -1,5 +1,3 @@
-__author__ = 'dheerendra'
-
 from rest_framework import serializers
 from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedCategory
 
@@ -42,8 +40,7 @@ class FeedEntrySerializer(serializers.ModelSerializer):
 class FeedCategorySerializer(serializers.ModelSerializer):
     subscribed = serializers.SerializerMethodField()
 
-    @staticmethod
-    def get_subscribed(obj):
+    def get_subscribed(self, obj):
         return obj.subscribers.all().exists()
 
     class Meta:
