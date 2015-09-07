@@ -2,17 +2,42 @@ from rest_framework import serializers
 from .models import FeedLike, FeedView, FeedConfig, FeedEntry, FeedCategory
 
 
+class FeedCategorySerializer(serializers.ModelSerializer):
+    subscribed = serializers.SerializerMethodField()
+
+    def get_subscribed(self, obj):
+        return obj.subscribers.all().exists()
+
+    class Meta:
+        model = FeedCategory
+        fields = ['id', 'term', 'scheme', 'label', 'feed_config', 'subscribed']
+
+
+class FeedConfigSerializer(serializers.ModelSerializer):
+    categories = FeedCategorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = FeedConfig
+        fields = ['id', 'title', 'link', 'updated', 'categories']
+
+
 class FeedEntrySerializer(serializers.ModelSerializer):
     liked = serializers.SerializerMethodField()
     viewed = serializers.SerializerMethodField()
-    likes = serializers.IntegerField(source='likes.count')
-    views = serializers.IntegerField(source='views.count')
+    likes = serializers.SerializerMethodField()  # IntegerField(source='likes.count')
+    views = serializers.SerializerMethodField()  # IntegerField(source='views.count')
     images = serializers.SerializerMethodField()
-    categories = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='term'
-    )
+    categories = FeedCategorySerializer(many=True)
+
+    def get_likes(self, obj):
+        if hasattr(obj, 'likes__count'):
+            return obj.likes__count
+        return 0
+
+    def get_views(self, obj):
+        if hasattr(obj, 'views__count'):
+            return obj.views__count
+        return 0
 
     def get_images(self, obj):
         images = obj.images
@@ -35,25 +60,6 @@ class FeedEntrySerializer(serializers.ModelSerializer):
         model = FeedEntry
         fields = ['id', 'feed_config', 'title', 'link', 'updated', 'content', 'author', 'liked', 'viewed', 'likes',
                   'views', 'images', 'categories']
-
-
-class FeedCategorySerializer(serializers.ModelSerializer):
-    subscribed = serializers.SerializerMethodField()
-
-    def get_subscribed(self, obj):
-        return obj.subscribers.all().exists()
-
-    class Meta:
-        model = FeedCategory
-        fields = ['id', 'term', 'scheme', 'label', 'feed_config', 'subscribed']
-
-
-class FeedConfigSerializer(serializers.ModelSerializer):
-    categories = FeedCategorySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = FeedConfig
-        fields = ['id', 'title', 'link', 'updated', 'categories']
 
 
 class FeedCategorySubscriptionSerializer(serializers.Serializer):

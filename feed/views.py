@@ -8,6 +8,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Prefetch
 from django.contrib.auth.models import User
 from pns.models import Device
+from django.db.models import Count
 
 from .serializers import FeedGenericSerializer, FeedLikeSerializer, FeedViewSerializer, FeedConfigSerializer, \
     FeedEntrySerializer, FeedEntryIdSerializer, FeedCategorySerializer, FeedCategorySubscriptionSerializer
@@ -60,10 +61,14 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
 
     def get_feed_entry_queryset(self):
         user = self.request.user
-        feed_entries = FeedEntry.objects.all().order_by('-updated').prefetch_related(
+        feed_entries = FeedEntry.objects.all().order_by('-updated').annotate(
+            Count('likes', distinct=True)
+        ).annotate(Count('views', distinct=True)).prefetch_related(
             Prefetch('likes', FeedEntryLike.objects.all().filter(user=user), 'liked')
         ).prefetch_related(
             Prefetch('views', FeedEntryView.objects.all().filter(user=user), 'viewed')
+        ).prefetch_related(
+            Prefetch('categories__subscribers', User.objects.all().filter(pk=user.id))
         )
         return feed_entries
 
