@@ -76,7 +76,7 @@ class FeedsViewset(viewsets.ReadOnlyModelViewSet):
             User has registered device in new Device model. Filter entries by subscribed categories now
             Important for maintaining backward compatibility!
             """
-            feed_entries = feed_entries.filter(categories__in=user.feed_subscriptions.all())
+            feed_entries = feed_entries.filter(categories__in=user.feed_subscriptions.all()).distinct()
         feed_entries = self.paginate_queryset(feed_entries)
         serialized_entries = FeedEntrySerializer(feed_entries, many=True).data
         return self.get_paginated_response(serialized_entries)
